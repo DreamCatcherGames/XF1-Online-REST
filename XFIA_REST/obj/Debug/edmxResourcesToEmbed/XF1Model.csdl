@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="XF1OnlineModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Administrator">
+    <Key>
+      <PropertyRef Name="Username" />
+    </Key>
+    <Property Name="Username" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Role" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Salt" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+    <Property Name="Token" Type="String" MaxLength="32" FixedLength="false" Unicode="false" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Championship">
+    <Key>
+      <PropertyRef Name="Unique_Key" />
+    </Key>
+    <Property Name="Unique_Key" Type="String" MaxLength="6" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Rules_Description" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+    <Property Name="Beginning_Date" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="Beginning_Time" Type="Time" Nullable="false" Precision="7" />
+    <Property Name="Ending_Date" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="Ending_Time" Type="Time" Nullable="false" />
+    <NavigationProperty Name="Races" Relationship="Self.FK_ChampKey" FromRole="Championship" ToRole="Race" />
+  </EntityType>
+  <EntityType Name="Country">
+    <Key>
+      <PropertyRef Name="Name" />
+    </Key>
+    <Property Name="Name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="Races" Relationship="Self.FK_Country" FromRole="Country" ToRole="Race" />
+  </EntityType>
+  <EntityType Name="Race">
+    <Key>
+      <PropertyRef Name="Name" />
+    </Key>
+    <Property Name="Name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Champ_Key" Type="String" MaxLength="6" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Country" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Status" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Qualification_Date" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="Competition_Date" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="Track_Name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Beginning_Date" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="Beginning_Time" Type="Time" Nullable="false" Precision="7" />
+    <Property Name="Ending_Date" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="Ending_Time" Type="Time" Nullable="false" Precision="7" />
+    <NavigationProperty Name="Championship" Relationship="Self.FK_ChampKey" FromRole="Race" ToRole="Championship" />
+    <NavigationProperty Name="Country1" Relationship="Self.FK_Country" FromRole="Race" ToRole="Country" />
+    <NavigationProperty Name="Status1" Relationship="Self.FK_Status" FromRole="Race" ToRole="Status" />
+  </EntityType>
+  <EntityType Name="Status">
+    <Key>
+      <PropertyRef Name="Type" />
+    </Key>
+    <Property Name="Type" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="Races" Relationship="Self.FK_Status" FromRole="Status" ToRole="Race" />
+  </EntityType>
+  <Association Name="FK_ChampKey">
+    <End Role="Championship" Type="Self.Championship" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Race" Type="Self.Race" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Championship">
+        <PropertyRef Name="Unique_Key" />
+      </Principal>
+      <Dependent Role="Race">
+        <PropertyRef Name="Champ_Key" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Country">
+    <End Role="Country" Type="Self.Country" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Race" Type="Self.Race" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Country">
+        <PropertyRef Name="Name" />
+      </Principal>
+      <Dependent Role="Race">
+        <PropertyRef Name="Country" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Status">
+    <End Role="Status" Type="Self.Status" Multiplicity="1" />
+    <End Role="Race" Type="Self.Race" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Status">
+        <PropertyRef Name="Type" />
+      </Principal>
+      <Dependent Role="Race">
+        <PropertyRef Name="Status" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="XF1OnlineEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Administrators" EntityType="Self.Administrator" />
+    <EntitySet Name="Championships" EntityType="Self.Championship" />
+    <EntitySet Name="Countries" EntityType="Self.Country" />
+    <EntitySet Name="Races" EntityType="Self.Race" />
+    <EntitySet Name="Status" EntityType="Self.Status" />
+    <AssociationSet Name="FK_ChampKey" Association="Self.FK_ChampKey">
+      <End Role="Championship" EntitySet="Championships" />
+      <End Role="Race" EntitySet="Races" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Country" Association="Self.FK_Country">
+      <End Role="Country" EntitySet="Countries" />
+      <End Role="Race" EntitySet="Races" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Status" Association="Self.FK_Status">
+      <End Role="Status" EntitySet="Status" />
+      <End Role="Race" EntitySet="Races" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

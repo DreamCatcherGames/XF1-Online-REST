@@ -83,3 +83,8 @@ C:\Users\dcama\Desktop\XFIA_REST\XFIA_REST\obj\Debug\XFIA_REST.csproj.CoreCompil
 C:\Users\dcama\Desktop\XFIA_REST\XFIA_REST\obj\Debug\XFIA_REST.csproj.CopyComplete
 C:\Users\dcama\Desktop\XFIA_REST\XFIA_REST\obj\Debug\XFIA_REST.dll
 C:\Users\dcama\Desktop\XFIA_REST\XFIA_REST\obj\Debug\XFIA_REST.pdb
+C:\Users\dcama\Desktop\XFIA_REST\XFIA_REST\bin\XFIA_REST.xml
+C:\Users\dcama\Desktop\XFIA_REST\XFIA_REST\bin\EntityFramework.dll
+C:\Users\dcama\Desktop\XFIA_REST\XFIA_REST\bin\EntityFramework.SqlServer.dll
+C:\Users\dcama\Desktop\XFIA_REST\XFIA_REST\bin\EntityFramework.xml
+C:\Users\dcama\Desktop\XFIA_REST\XFIA_REST\bin\EntityFramework.SqlServer.xml
