@@ -602,8 +602,4 @@ $RECYCLE.BIN/
 ### VisualStudio Patch ###
 # Additional files built by Visual Studio
 
-<<<<<<< HEAD
 # End of https://www.toptal.com/developers/gitignore/api/csharp,windows,visualstudio
-=======
-# End of https://www.toptal.com/developers/gitignore/api/csharp,windows,visualstudio
->>>>>>> 20d8eb02de0fc9b7423c1c2867467c587d93020b
