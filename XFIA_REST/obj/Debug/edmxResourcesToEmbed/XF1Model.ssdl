@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="XF1OnlineModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Administrator">
+    <Key>
+      <PropertyRef Name="Username" />
+    </Key>
+    <Property Name="Username" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="Role" Type="varchar" MaxLength="25" Nullable="false" />
+    <Property Name="Password" Type="varchar" MaxLength="50" />
+    <Property Name="Salt" Type="varchar" MaxLength="32" />
+    <Property Name="Token" Type="varchar" MaxLength="32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Championship">
+    <Key>
+      <PropertyRef Name="Unique_Key" />
+    </Key>
+    <Property Name="Unique_Key" Type="varchar" MaxLength="6" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="30" Nullable="false" />
+    <Property Name="Rules_Description" Type="varchar" MaxLength="1000" />
+    <Property Name="Beginning_Date" Type="date" Nullable="false" />
+    <Property Name="Beginning_Time" Type="time" Precision="7" Nullable="false" />
+    <Property Name="Ending_Date" Type="date" Nullable="false" />
+    <Property Name="Ending_Time" Type="time" Precision="7" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Country">
+    <Key>
+      <PropertyRef Name="Name" />
+    </Key>
+    <Property Name="Name" Type="varchar" MaxLength="30" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Race">
+    <Key>
+      <PropertyRef Name="Name" />
+    </Key>
+    <Property Name="Name" Type="varchar" MaxLength="30" Nullable="false" />
+    <Property Name="Champ_Key" Type="varchar" MaxLength="6" Nullable="false" />
+    <Property Name="Country" Type="varchar" MaxLength="30" Nullable="false" />
+    <Property Name="Status" Type="varchar" MaxLength="30" Nullable="false" />
+    <Property Name="Qualification_Date" Type="date" Nullable="false" />
+    <Property Name="Competition_Date" Type="date" Nullable="false" />
+    <Property Name="Track_Name" Type="varchar" MaxLength="30" Nullable="false" />
+    <Property Name="Beginning_Date" Type="date" Nullable="false" />
+    <Property Name="Beginning_Time" Type="time" Precision="7" Nullable="false" />
+    <Property Name="Ending_Date" Type="date" Nullable="false" />
+    <Property Name="Ending_Time" Type="time" Precision="7" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Status">
+    <Key>
+      <PropertyRef Name="Type" />
+    </Key>
+    <Property Name="Type" Type="varchar" MaxLength="30" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_ChampKey">
+    <End Role="Championship" Type="Self.Championship" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Race" Type="Self.Race" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Championship">
+        <PropertyRef Name="Unique_Key" />
+      </Principal>
+      <Dependent Role="Race">
+        <PropertyRef Name="Champ_Key" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Country">
+    <End Role="Country" Type="Self.Country" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Race" Type="Self.Race" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Country">
+        <PropertyRef Name="Name" />
+      </Principal>
+      <Dependent Role="Race">
+        <PropertyRef Name="Country" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Status">
+    <End Role="Status" Type="Self.Status" Multiplicity="1" />
+    <End Role="Race" Type="Self.Race" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Status">
+        <PropertyRef Name="Type" />
+      </Principal>
+      <Dependent Role="Race">
+        <PropertyRef Name="Status" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="XF1OnlineModelStoreContainer">
+    <EntitySet Name="Administrator" EntityType="Self.Administrator" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Championship" EntityType="Self.Championship" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Country" EntityType="Self.Country" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Race" EntityType="Self.Race" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Status" EntityType="Self.Status" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_ChampKey" Association="Self.FK_ChampKey">
+      <End Role="Championship" EntitySet="Championship" />
+      <End Role="Race" EntitySet="Race" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Country" Association="Self.FK_Country">
+      <End Role="Country" EntitySet="Country" />
+      <End Role="Race" EntitySet="Race" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Status" Association="Self.FK_Status">
+      <End Role="Status" EntitySet="Status" />
+      <End Role="Race" EntitySet="Race" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

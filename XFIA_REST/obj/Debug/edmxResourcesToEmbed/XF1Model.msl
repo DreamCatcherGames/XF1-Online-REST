@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="XF1OnlineModelStoreContainer" CdmEntityContainer="XF1OnlineEntities">
+    <EntitySetMapping Name="Administrators">
+      <EntityTypeMapping TypeName="XF1OnlineModel.Administrator">
+        <MappingFragment StoreEntitySet="Administrator">
+          <ScalarProperty Name="Username" ColumnName="Username" />
+          <ScalarProperty Name="Role" ColumnName="Role" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="Salt" ColumnName="Salt" />
+          <ScalarProperty Name="Token" ColumnName="Token" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Championships">
+      <EntityTypeMapping TypeName="XF1OnlineModel.Championship">
+        <MappingFragment StoreEntitySet="Championship">
+          <ScalarProperty Name="Unique_Key" ColumnName="Unique_Key" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Rules_Description" ColumnName="Rules_Description" />
+          <ScalarProperty Name="Beginning_Date" ColumnName="Beginning_Date" />
+          <ScalarProperty Name="Beginning_Time" ColumnName="Beginning_Time" />
+          <ScalarProperty Name="Ending_Date" ColumnName="Ending_Date" />
+          <ScalarProperty Name="Ending_Time" ColumnName="Ending_Time" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Countries">
+      <EntityTypeMapping TypeName="XF1OnlineModel.Country">
+        <MappingFragment StoreEntitySet="Country">
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Races">
+      <EntityTypeMapping TypeName="XF1OnlineModel.Race">
+        <MappingFragment StoreEntitySet="Race">
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Champ_Key" ColumnName="Champ_Key" />
+          <ScalarProperty Name="Country" ColumnName="Country" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="Qualification_Date" ColumnName="Qualification_Date" />
+          <ScalarProperty Name="Competition_Date" ColumnName="Competition_Date" />
+          <ScalarProperty Name="Track_Name" ColumnName="Track_Name" />
+          <ScalarProperty Name="Beginning_Date" ColumnName="Beginning_Date" />
+          <ScalarProperty Name="Beginning_Time" ColumnName="Beginning_Time" />
+          <ScalarProperty Name="Ending_Date" ColumnName="Ending_Date" />
+          <ScalarProperty Name="Ending_Time" ColumnName="Ending_Time" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Status">
+      <EntityTypeMapping TypeName="XF1OnlineModel.Status">
+        <MappingFragment StoreEntitySet="Status">
+          <ScalarProperty Name="Type" ColumnName="Type" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>
