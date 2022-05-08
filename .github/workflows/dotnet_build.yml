@@ -1,0 +1,31 @@
+name: .NET
+
+on:
+  pull_request:
+    branches: [ master ]
+
+env:
+  app-name: "xf1onlinerest"
+  rg-name: "XF1Online"
+  ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
+
+jobs:
+  build:
+    runs-on: windows-latest
+ 
+    steps:
+    - uses: actions/checkout@v1
+      name: Checkout Code
+     
+    - name: Setup MSBuild Path
+      uses: warrenbuckley/Setup-MSBuild@v1
+       
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v1.0.2
+     
+    - name: Restore NuGet Packages
+      run: nuget restore XFIA_REST.sln
+ 
+    - name: Build and Publish Web App
+      run: msbuild XFIA_REST.sln /p:Configuration=Release /p:DeployOnBuild=true /p:PublishProfile=FolderProfile
+ 

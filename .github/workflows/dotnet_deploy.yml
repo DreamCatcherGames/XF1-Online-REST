@@ -1,0 +1,68 @@
+name: .NET
+
+on:
+  push:
+    branches: [ master ]
+
+env:
+  app-name: "xf1onlinerest"
+  rg-name: "XF1Online"
+  ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
+
+jobs:
+  build:
+ 
+    runs-on: windows-latest
+ 
+    steps:
+    - uses: actions/checkout@v1
+      name: Checkout Code
+     
+    - name: Setup MSBuild Path
+      uses: warrenbuckley/Setup-MSBuild@v1
+       
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v1.0.2
+     
+    - name: Restore NuGet Packages
+      run: nuget restore XFIA_REST.sln
+ 
+    - name: Build and Publish Web App
+      run: msbuild XFIA_REST.sln /p:Configuration=Release /p:DeployOnBuild=true /p:PublishProfile=FolderProfile
+ 
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        name: rest
+        path: D:\a\XF1-Online-REST\XF1-Online-REST\XFIA_REST\bin\Release\Publish
+        if-no-files-found: error
+        
+  deploy_staging:
+    needs: build
+    runs-on: ubuntu-latest
+    
+    environment:
+      name: PRE-PROD
+      url: ${{steps.deploywebapp.outputs.webapp-url}}
+      
+    steps:
+    - name: Download a Build Artifact
+      uses: actions/download-artifact@v2.0.8
+      with:
+        name: rest
+        path: rest
+
+    - name: Login via Azure CLI
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Deploy web app
+      id: deploywebapp
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: ${{ env.app-name }}
+        package: rest
+
+    - name: az cli logout
+      run: az logout
