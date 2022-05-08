@@ -29,10 +29,10 @@ namespace XFIA_REST.Controllers
             return Request.CreateResponse(HttpStatusCode.Unauthorized, "Usuario o Contraseña incorrectos");
         }
 
-        // GET: api/Admin/5
+        [Route("api/Admin/test")]
         public string Get(int id)
         {
-            return "value";
+            return "Hola Zeledon";
         }
 
         // POST: api/Admin
