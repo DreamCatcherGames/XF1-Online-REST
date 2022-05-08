@@ -11,6 +11,7 @@ env:
 
 jobs:
   build:
+ 
     runs-on: windows-latest
  
     steps:
@@ -24,8 +25,8 @@ jobs:
       uses: NuGet/setup-nuget@v1.0.2
      
     - name: Restore NuGet Packages
-      run: nuget restore XFIA_REST.sln
+      run: nuget restore XF1_Online_REST.sln
  
-    - name: Build and Publish Web App
-      run: msbuild XFIA_REST.sln /p:Configuration=Release /p:DeployOnBuild=true /p:PublishProfile=FolderProfile
+    - name: Build Web App
+      run: msbuild XF1_Online_REST.sln /p:Configuration=Release /p:DeployOnBuild=true /p:PublishProfile=FolderProfile
  
