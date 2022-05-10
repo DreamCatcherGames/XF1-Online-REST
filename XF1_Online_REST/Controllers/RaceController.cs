@@ -4,11 +4,13 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using XF1_Online_REST.LogicScript;
 
 namespace XF1_Online_REST.Controllers
 {
     public class RaceController : ApiController
-    {
+    { 
+        private RaceLogic logic = new RaceLogic();
         // GET: api/Race
         public IEnumerable<string> Get()
         {
@@ -21,9 +23,11 @@ namespace XF1_Online_REST.Controllers
             return "value";
         }
 
-        // POST: api/Race
-        public void Post([FromBody]string value)
+       
+        [Route("api/Race/addRace/{token}")]
+        public HttpResponseMessage Post([FromBody]Race race,string token)
         {
+            return logic.raceCreationRequest(race, token);
         }
 
         // PUT: api/Race/5
