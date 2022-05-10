@@ -25,8 +25,12 @@ namespace XF1_Online_REST.LogicScript
             {
                 if (tools.raceDateVerifier(race))
                 {
+                    if(race.Status==null)
+                    {
+                        race.Status = "Pendiente";
+                    }
                     dbContext.Races.Add(race);
-                    dbContext.SaveChangesAsync();
+                    dbContext.SaveChanges();
                     return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("Race added successfully") };
                 }
                 return new HttpResponseMessage(HttpStatusCode.Conflict) { Content = new StringContent("The dates given for this race are wrong or they are not inside the championship date range")};

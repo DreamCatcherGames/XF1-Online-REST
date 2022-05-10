@@ -118,15 +118,16 @@ namespace XF1_Online_REST.LogicScripts
         /// <returns><see cref="Boolean"/> object that tells if the dates of the date provided are Ok</returns>
         public Boolean raceDateVerifier(Race race)
         {
+            Championship champ = dbContext.Championships.Find(race.Champ_Key);
             DateTime actualDate=DateTime.Now;
             Boolean validDatesCond=race.Beginning_Date>=actualDate&&race.Ending_Date>=actualDate;
             Boolean consistencyCond = race.Beginning_Date < race.Ending_Date && race.Qualification_Date < race.Competition_Date;
-            Boolean insideChampionshipCond = containedDateValidation(race.Beginning_Date, race.Ending_Date,race.Championship.Beginning_Date,race.Championship.Ending_Date);
+            Boolean insideChampionshipCond = containedDateValidation(race.Beginning_Date, race.Ending_Date,champ.Beginning_Date,champ.Ending_Date);
             Boolean insideValidDateRangeCond = containedDateValidation(race.Qualification_Date,race.Competition_Date,race.Beginning_Date,race.Ending_Date);
 
             if(consistencyCond&&insideChampionshipCond&&validDatesCond&&insideValidDateRangeCond)
             {
-                List<Race> races = dbContext.Championships.Find(race.Championship).Races.ToList();
+                List<Race> races = champ.Races.ToList();
                 foreach(Race raceT in races)
                 {
                     if(raceDateBumpVerification(race,raceT))
