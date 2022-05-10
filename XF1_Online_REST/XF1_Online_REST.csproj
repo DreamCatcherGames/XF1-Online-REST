@@ -169,6 +169,7 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\RaceController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Country.cs">
       <DependentUpon>Model1.tt</DependentUpon>
@@ -176,6 +177,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="LogicScript\RaceLogic.cs" />
     <Compile Include="LogicScript\Tools.cs" />
     <Compile Include="Model1.Context.cs">
       <AutoGen>True</AutoGen>
