@@ -175,8 +175,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="LogicScript\ChampionshipLogic.cs" />
-    <Compile Include="LogicScript\Tools.cs" />
+    <Compile Include="LogicScripts\ChampionshipLogic.cs" />
+    <Compile Include="LogicScripts\Tools.cs" />
     <Compile Include="Model1.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
