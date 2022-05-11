@@ -55,7 +55,8 @@ namespace XF1_Online_REST.LogicScripts
         /// <returns><see cref="Boolean"/> object that indicates if the token provided is unique inside the database</returns>
         public Boolean uniqueTokenVerificator(string token)
         {
-            return !dbContext.Administrators.Any(o => o.Token == encryptToken(token));
+            string encryptedToken = encryptToken(token);
+            return !dbContext.Administrators.Any(o => o.Token == encryptedToken);
         }
 
         /// <summary>
