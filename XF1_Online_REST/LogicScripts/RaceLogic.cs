@@ -19,9 +19,9 @@ namespace XF1_Online_REST.LogicScript
             this.tools = new Tools();
         }
 
-        public HttpResponseMessage raceCreationRequest(Race race,string token)
+        public HttpResponseMessage raceCreationRequest(Race race,string token,string salt)
         {
-            if(tools.verifyAdminToken(token))
+            if(tools.verifyAdminToken(token,salt))
             {
                 if (tools.raceDateVerifier(race))
                 {
@@ -36,6 +36,17 @@ namespace XF1_Online_REST.LogicScript
                 return new HttpResponseMessage(HttpStatusCode.Conflict) { Content = new StringContent("The dates given for this race are wrong or they are not inside the championship date range")};
             }
             return new HttpResponseMessage(HttpStatusCode.Unauthorized) { Content = new StringContent("Invalid token") };
+        }
+        public HttpResponseMessage raceDeletionRequest(Race race,string token,string salt)
+        {
+            if(tools.verifyAdminToken(token,salt))
+            {
+                dbContext.Races.Remove(race);
+                dbContext.SaveChanges();
+                return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("Race deleted succesfully") };
+            }
+            return new HttpResponseMessage(HttpStatusCode.Unauthorized) { Content = new StringContent("Invalid token") };
+
         }
     }
 }

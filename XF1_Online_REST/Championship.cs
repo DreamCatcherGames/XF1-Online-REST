@@ -22,6 +22,7 @@ namespace XF1_Online_REST
     
         public string Unique_Key { get; set; }
         public string Name { get; set; }
+        public Boolean CurrentChamp { get; set; }
         public string Rules_Description { get; set; }
         public System.DateTime Beginning_Date { get; set; }
         public System.TimeSpan Beginning_Time { get; set; }

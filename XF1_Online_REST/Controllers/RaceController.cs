@@ -24,10 +24,10 @@ namespace XF1_Online_REST.Controllers
         }
 
        
-        [Route("api/Race/addRace/{token}")]
-        public HttpResponseMessage Post([FromBody]Race race,string token)
+        [Route("api/Race/addRace/{token}/{salt}")]
+        public HttpResponseMessage Post([FromBody]Race race,string token,string salt)
         {
-            return logic.raceCreationRequest(race, token);
+            return logic.raceCreationRequest(race, token,salt);
         }
 
         // PUT: api/Race/5
