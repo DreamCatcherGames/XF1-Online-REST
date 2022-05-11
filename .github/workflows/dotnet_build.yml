@@ -29,4 +29,7 @@ jobs:
  
     - name: Build Web App
       run: msbuild XF1_Online_REST.sln /p:Configuration=Release /p:DeployOnBuild=true /p:PublishProfile=FolderProfile
+    
+    - name: Running Tests
+      run: vstest.console.exe .\TestSuite\bin\Debug\XF1_Online_REST.dll
  
