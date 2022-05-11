@@ -18,7 +18,13 @@ namespace XF1_Online_REST.LogicScript
             dbContext = new XF1OnlineEntities();
             tools = new Tools();
         }
-
+        /// <summary>
+        /// Method designed to make the request for the creation of a new championship
+        /// </summary>
+        /// <param name="champ"><see cref="Championship"/> object that contains the information of the championship to be registered</param>
+        /// <param name="token"><see cref="string"/> object that contains the admin unique token</param>
+        /// <param name="salt"><see cref="string"/> object that contains the salt needed for dencryption of the saved admin token</param>
+        /// <returns><see cref="HttpResponseMessage"/> object that contains an appropiate response to the state of the request made</returns>
         public HttpResponseMessage championshipCreationRequest(Championship champ,string token,string salt)
         {
             if (tools.verifyAdminToken(token,salt))
@@ -41,13 +47,36 @@ namespace XF1_Online_REST.LogicScript
                         }
                         dbContext.Championships.Add(champ);
 
-                        dbContext.SaveChangesAsync();
+                        dbContext.SaveChanges();
 
                         return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("Championship added successfully") };
                     }
                     return new HttpResponseMessage(HttpStatusCode.Conflict) { Content = new StringContent("The times provided for this championship are not correct") };
                 }
                 return new HttpResponseMessage(HttpStatusCode.Conflict) { Content = new StringContent("Dates provided bump into another championship dates or they are not correct") };
+            }
+            return new HttpResponseMessage(HttpStatusCode.Unauthorized) { Content = new StringContent("Invalid token") };
+        }
+        /// <summary>
+        /// Method designed to make the request to delete a championship
+        /// </summary>
+        /// <param name="champId"><see cref="Championship"/> object that contains the unique key of the championship to delete</param>
+        /// <param name="token"><see cref="string"/> object that contains the admin unique token</param>
+        /// <param name="salt"><see cref="string"/> object that contains the salt needed for dencryption of the saved admin token</param>
+        /// <returns><see cref="HttpResponseMessage"/> object that contains an appropiate response to the state of the request made</returns>
+        public HttpResponseMessage championshipDeletionRequest(string champId,string token,string salt)
+        {
+            if(tools.verifyAdminToken(token,salt))
+            {
+                Championship champ = dbContext.Championships.Find(champId);
+                if(champ!=null)
+                {
+                    dbContext.Championships.Remove(champ);
+                    dbContext.SaveChanges();
+
+                    return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("Championship deleted succesfully") };
+                }
+                return new HttpResponseMessage(HttpStatusCode.NotFound) { Content = new StringContent("The specified championship does not exists on our records") };
             }
             return new HttpResponseMessage(HttpStatusCode.Unauthorized) { Content = new StringContent("Invalid token") };
         }

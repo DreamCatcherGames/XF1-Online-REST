@@ -71,7 +71,7 @@ namespace XF1_Online_REST.LogicScripts
                 admin.Token = encryptToken(token,admin.Salt);
                 
             }
-            dbContext.SaveChangesAsync();
+            dbContext.SaveChanges();
         }
 
         /// <summary>
@@ -103,7 +103,6 @@ namespace XF1_Online_REST.LogicScripts
             string result = BitConverter.ToString(bytes).Replace("-", String.Empty).ToLower();
             return new List<string>(new string[] { result, salt });
         }
-
         /// <summary>
         /// Method to verify if a given password matches a MD5 encrypted password
         /// </summary>
