@@ -31,13 +31,31 @@ namespace XF1_Online_REST.LogicScripts
             return token;
         }
         /// <summary>
+        /// Method to encrypt a token
+        /// </summary>
+        /// <param name="token"><see cref="string"/> object that represents the token to be encrypted</param>
+        /// <returns> Encrypted token</returns>
+        public string encryptToken(string token)
+        {
+            var rng = new System.Security.Cryptography.RNGCryptoServiceProvider();
+            var buff = new byte[10];
+            rng.GetBytes(buff);
+
+            string salt = Convert.ToBase64String(buff);
+
+            MD5 md5 = new MD5CryptoServiceProvider();
+            byte[] bytes = md5.ComputeHash(System.Text.Encoding.Unicode.GetBytes(token));
+            return BitConverter.ToString(bytes).Replace("-", String.Empty).ToLower();
+            
+        }
+        /// <summary>
         /// Method to verify if a token is unique inside the database
         /// </summary>
         /// <param name="token"><see cref="string"/> that represents the token needed to be verified inside the database</param>
         /// <returns><see cref="Boolean"/> object that indicates if the token provided is unique inside the database</returns>
         public Boolean uniqueTokenVerificator(string token)
         {
-            return !dbContext.Administrators.Any(o => o.Token == token);
+            return !dbContext.Administrators.Any(o => o.Token == encryptToken(token));
         }
 
         /// <summary>
@@ -51,7 +69,7 @@ namespace XF1_Online_REST.LogicScripts
             {
                 Administrator admin= (Administrator)user;
                 admin = dbContext.Administrators.Find(admin.Username);
-                admin.Token = token;
+                admin.Token = encryptToken(token);
                 
             }
             dbContext.SaveChangesAsync();
