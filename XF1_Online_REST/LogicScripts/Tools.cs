@@ -79,9 +79,10 @@ namespace XF1_Online_REST.LogicScripts
         /// </summary>
         /// <param name="token"><see cref="string"/> object that represents the token needed to be verified</param>
         /// <returns><see cref="Boolean"/> object that determines if the token was found</returns>
-        public Boolean verifyAdminToken(string token)
+        public Boolean verifyAdminToken(string token,string salt)
         {
-            return dbContext.Administrators.Any(o => o.Token == token);
+            string tempToken=encryptToken(token,salt);
+            return dbContext.Administrators.Any(o => o.Token == tempToken);
         }
 
         /// <summary>

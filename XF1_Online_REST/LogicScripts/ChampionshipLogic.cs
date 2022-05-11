@@ -19,9 +19,9 @@ namespace XF1_Online_REST.LogicScript
             tools = new Tools();
         }
 
-        public HttpResponseMessage championshipCreationRequest(Championship champ,string token)
+        public HttpResponseMessage championshipCreationRequest(Championship champ,string token,string salt)
         {
-            if (tools.verifyAdminToken(token))
+            if (tools.verifyAdminToken(token,salt))
             {
                 if (tools.championshipDateVerifier(champ))
                 {

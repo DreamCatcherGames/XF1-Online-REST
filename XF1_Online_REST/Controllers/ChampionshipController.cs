@@ -31,10 +31,10 @@ namespace XF1_Online_REST.Controllers
         /// <param name="champ"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        [Route("api/PostChampionship/{token}")]
-        public HttpResponseMessage Post([FromBody]Championship champ,string token)
+        [Route("api/Championship/addChampionship/{token}/{salt}")]
+        public HttpResponseMessage Post([FromBody]Championship champ,string token,string salt)
         {
-            return logic.championshipCreationRequest(champ,token);
+            return logic.championshipCreationRequest(champ,token,salt);
         }
 
         // PUT: api/Championship/5
