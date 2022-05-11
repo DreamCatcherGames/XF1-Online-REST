@@ -27,7 +27,7 @@ namespace XF1_Online_REST.LogicScripts
             }
             if (tools.verifyPassword(admin.Password, testAdmin.Password, testAdmin.Salt))
             {
-                string token = tools.getToken();
+                string token = tools.getToken(admin.Salt);
                 tools.assignToken(admin, token);
                 return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(token) };
             }
