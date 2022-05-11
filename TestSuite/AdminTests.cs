@@ -16,7 +16,7 @@ namespace TestSuite
         public void okLoginTest()
         {
             Administrator admin = new Administrator();
-            admin.Username = "rootAdmin";
+            admin.Username = "loginTestAdmin";
             admin.Password = "admin1234";
 
             HttpResponseMessage response=logic.loginRequest(admin);
@@ -26,7 +26,7 @@ namespace TestSuite
         public void wrongloginTest()
         {
             Administrator admin = new Administrator();
-            admin.Username = "rootAdmin";
+            admin.Username = "loginTestAdmin";
             admin.Password = "admin123";
 
 

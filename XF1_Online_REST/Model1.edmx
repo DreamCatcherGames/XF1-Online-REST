@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="XF1OnlineModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="XF1OnlineModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Administrator">
           <Key>
             <PropertyRef Name="Username" />
@@ -21,6 +21,7 @@
           </Key>
           <Property Name="Unique_Key" Type="varchar" MaxLength="6" Nullable="false" />
           <Property Name="Name" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="CurrentChamp" Type="bit" Nullable="false" />
           <Property Name="Rules_Description" Type="varchar" MaxLength="1000" />
           <Property Name="Beginning_Date" Type="date" Nullable="false" />
           <Property Name="Beginning_Time" Type="time" Precision="7" Nullable="false" />
@@ -117,8 +118,7 @@
             <End Role="Race" EntitySet="Race" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="XF1OnlineModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -145,6 +145,7 @@
           <Property Name="Ending_Time" Type="Time" Nullable="false" Precision="7" />
           <Property Name="Public_League_Name" Type="String" MaxLength="40" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="Races" Relationship="Self.FK_ChampKey" FromRole="Championship" ToRole="Race" />
+          <Property Name="CurrentChamp" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="Country">
           <Key>
@@ -260,6 +261,7 @@
           <EntitySetMapping Name="Championships">
             <EntityTypeMapping TypeName="XF1OnlineModel.Championship">
               <MappingFragment StoreEntitySet="Championship">
+                <ScalarProperty Name="CurrentChamp" ColumnName="CurrentChamp" />
                 <ScalarProperty Name="Unique_Key" ColumnName="Unique_Key" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Rules_Description" ColumnName="Rules_Description" />
