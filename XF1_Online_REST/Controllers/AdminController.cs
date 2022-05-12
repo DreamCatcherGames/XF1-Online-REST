@@ -25,7 +25,7 @@ namespace XFIA_REST.Controllers
         }
 
         [Route("api/Admin/test")]
-        public string Get(int id)
+        public string Get()
         {
             return "Hola Zeledon";
         }

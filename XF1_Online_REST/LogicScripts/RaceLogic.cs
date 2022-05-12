@@ -33,7 +33,7 @@ namespace XF1_Online_REST.LogicScript
                     dbContext.SaveChanges();
                     return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("Race added successfully") };
                 }
-                return new HttpResponseMessage(HttpStatusCode.Conflict) { Content = new StringContent("The dates given for this race are wrong or they are not inside the championship date range")};
+                return new HttpResponseMessage(HttpStatusCode.Conflict) { Content = new StringContent("The dates given for this race are wrong or bump into another race. Check if it's inisde the championship date range")};
             }
             return new HttpResponseMessage(HttpStatusCode.Unauthorized) { Content = new StringContent("Invalid token") };
         }
