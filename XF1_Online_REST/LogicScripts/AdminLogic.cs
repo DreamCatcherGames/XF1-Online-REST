@@ -30,6 +30,7 @@ namespace XF1_Online_REST.LogicScripts
             {
                 string token = tools.getToken(admin.Salt);
                 tools.assignToken(admin, token);
+                admin = dbContext.Administrators.Find(admin.Username);
                 admin.Token = token;
                 return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(JsonConvert.SerializeObject(admin)) };
             }
