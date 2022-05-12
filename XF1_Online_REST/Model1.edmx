@@ -170,9 +170,6 @@
           <Property Name="Beginning_Time" Type="Time" Nullable="false" Precision="7" />
           <Property Name="Ending_Date" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="Ending_Time" Type="Time" Nullable="false" Precision="7" />
-          <NavigationProperty Name="Championship" Relationship="Self.FK_ChampKey" FromRole="Race" ToRole="Championship" />
-          <NavigationProperty Name="Country1" Relationship="Self.FK_Country" FromRole="Race" ToRole="Country" />
-          <NavigationProperty Name="Status1" Relationship="Self.FK_Status" FromRole="Race" ToRole="Status" />
         </EntityType>
         <EntityType Name="Status">
           <Key>

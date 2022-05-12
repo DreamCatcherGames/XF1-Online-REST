@@ -11,16 +11,17 @@ namespace XF1_Online_REST.Controllers
     public class RaceController : ApiController
     { 
         private RaceLogic logic = new RaceLogic();
-        // GET: api/Race
-        public IEnumerable<string> Get()
+
+        [Route("api/Race/getRacesChamp/{champId}/{token}/{salt}")]
+        public HttpResponseMessage GetRacesByChamp(string champId,string token,string salt)
         {
-            return new string[] { "value1", "value2" };
+            return logic.getRacesByChampionshipRequest(champId, token, salt);
         }
 
-        // GET: api/Race/5
-        public string Get(int id)
+        [Route("api/Race/getRaceId/{champId}/{raceName}/{country}/{token}/{salt}")]
+        public HttpResponseMessage GetRaceById(string champId,string raceName,string country,string token,string salt)
         {
-            return "value";
+            return logic.getRaceByIdRequest(champId,raceName,country,token,salt);
         }
 
        
