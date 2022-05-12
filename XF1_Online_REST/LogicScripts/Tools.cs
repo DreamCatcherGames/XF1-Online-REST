@@ -122,6 +122,51 @@ namespace XF1_Online_REST.LogicScripts
 
             return result == encryptedPassword;
         }
+        /// <summary>
+        /// Method designed to verify if all the dates of a race are correctly set
+        /// </summary>
+        /// <param name="race"><see cref="Race"/> object that contains all the  information to be analyzed</param>
+        /// <returns><see cref="Boolean"/> object that tells if the dates of the date provided are Ok</returns>
+        public Boolean raceDateVerifier(Race race)
+        {
+            Championship champ = dbContext.Championships.Find(race.Champ_Key);
+            DateTime actualDate=DateTime.Now;
+            Boolean validDatesCond=race.Beginning_Date>=actualDate&&race.Ending_Date>=actualDate;
+            Boolean consistencyCond = race.Beginning_Date < race.Ending_Date && race.Qualification_Date < race.Competition_Date;
+            Boolean insideChampionshipCond = containedDateValidation(race.Beginning_Date, race.Ending_Date,champ.Beginning_Date,champ.Ending_Date);
+            Boolean insideValidDateRangeCond = containedDateValidation(race.Qualification_Date,race.Competition_Date,race.Beginning_Date,race.Ending_Date);
+
+            if(consistencyCond&&insideChampionshipCond&&validDatesCond&&insideValidDateRangeCond)
+            {
+                List<Race> races = champ.Races.ToList();
+                foreach(Race raceT in races)
+                {
+                    if(raceDateBumpVerification(race,raceT))
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
+        /// <summary>
+        /// Method to verify if there's any kind of intersection between two races date range.
+        /// </summary>
+        /// <param name="race1"><see cref="Race"/> object that contains the date range of the first race to be analyzed</param>
+        /// <param name="race2"><see cref="Race"/> object that contains the date range of the second race to be analyzed</param>
+        /// <returns></returns>
+        public Boolean raceDateBumpVerification(Race race1,Race race2)
+        {
+            Boolean intersectionCond = intersectionDateValidation(race1.Beginning_Date, race1.Ending_Date, race2.Beginning_Date, race2.Ending_Date)||
+                                       intersectionDateValidation(race2.Beginning_Date, race2.Ending_Date, race1.Beginning_Date, race1.Ending_Date);
+
+            Boolean containerCond = containedDateValidation(race1.Beginning_Date, race1.Ending_Date, race2.Beginning_Date, race2.Ending_Date) ||
+                                    containedDateValidation(race2.Beginning_Date, race2.Ending_Date, race1.Beginning_Date, race1.Ending_Date);
+
+            return intersectionCond || containerCond;
+        }
+
 
         /// <summary>
         /// Method designed to create a unique key of 6 characters for a championship

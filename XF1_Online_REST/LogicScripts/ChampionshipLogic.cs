@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -81,5 +82,23 @@ namespace XF1_Online_REST.LogicScript
             return new HttpResponseMessage(HttpStatusCode.Unauthorized) { Content = new StringContent("Invalid token") };
         }
 
+        public HttpResponseMessage currentChampionRequest()
+        {
+            Championship currentChamp;
+            try
+            {
+                currentChamp = dbContext.Championships.FirstOrDefault(o => o.CurrentChamp == true);
+            }
+            catch(Exception ex)
+            {
+                currentChamp=null;
+            }
+
+            if (currentChamp != null)
+            {
+                return new HttpResponseMessage(HttpStatusCode.OK){Content = new StringContent(JsonConvert.SerializeObject(currentChamp)) };
+            }
+            return new HttpResponseMessage(HttpStatusCode.Conflict) { Content = new StringContent("There's no current championship for now") };
+        }
     }
 }

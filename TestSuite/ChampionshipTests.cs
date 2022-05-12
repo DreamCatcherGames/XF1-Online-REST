@@ -35,9 +35,9 @@ namespace TestSuite
         {
             champ1.Name = "Test1";
             champ1.Rules_Description = "Reglas 1";
-            champ1.Beginning_Date = new DateTime(2022,12,25);
+            champ1.Beginning_Date = new DateTime(2023,12,25);
             champ1.Beginning_Time = new TimeSpan(7,0,0);
-            champ1.Ending_Date = new DateTime(2022,12,31);
+            champ1.Ending_Date = new DateTime(2023,12,31);
             champ1.Ending_Time = new TimeSpan(23,59,59);
 
             HttpResponseMessage response = logic.championshipCreationRequest(champ1, admin.Token, admin.Salt);
