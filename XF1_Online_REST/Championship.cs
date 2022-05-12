@@ -14,23 +14,14 @@ namespace XF1_Online_REST
     
     public partial class Championship
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Championship()
-        {
-            this.Races = new HashSet<Race>();
-        }
-    
         public string Unique_Key { get; set; }
         public string Name { get; set; }
-        public Boolean CurrentChamp { get; set; }
         public string Rules_Description { get; set; }
         public System.DateTime Beginning_Date { get; set; }
         public System.TimeSpan Beginning_Time { get; set; }
         public System.DateTime Ending_Date { get; set; }
         public System.TimeSpan Ending_Time { get; set; }
         public string Public_League_Name { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Race> Races { get; set; }
+        public bool CurrentChamp { get; set; }
     }
 }

@@ -138,7 +138,7 @@ namespace XF1_Online_REST.LogicScripts
 
             if(consistencyCond&&insideChampionshipCond&&validDatesCond&&insideValidDateRangeCond)
             {
-                List<Race> races = champ.Races.ToList();
+                List<Race> races = dbContext.Races.Where(o => o.Champ_Key==champ.Unique_Key).ToList<Race>();
                 foreach(Race raceT in races)
                 {
                     if(raceDateBumpVerification(race,raceT))

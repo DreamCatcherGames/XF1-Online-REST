@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Formatting;
 using System.Web;
 using XF1_Online_REST.LogicScripts;
 
@@ -81,24 +82,55 @@ namespace XF1_Online_REST.LogicScript
             }
             return new HttpResponseMessage(HttpStatusCode.Unauthorized) { Content = new StringContent("Invalid token") };
         }
-
-        public HttpResponseMessage currentChampionRequest()
+        public HttpResponseMessage championshipRequest(string champId,string token,string salt)
         {
-            Championship currentChamp;
-            try
+            if(tools.verifyAdminToken(token,salt))
             {
-                currentChamp = dbContext.Championships.FirstOrDefault(o => o.CurrentChamp == true);
+                Championship champ= dbContext.Championships.Find(champId);
+                if(champ!=null)
+                {
+                    return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(JsonConvert.SerializeObject(champ)) };
+                }
+                return new HttpResponseMessage(HttpStatusCode.NotFound) { Content = new StringContent("Championship not found") };
             }
-            catch(Exception ex)
+            return new HttpResponseMessage(HttpStatusCode.Unauthorized) { Content = new StringContent("Invalid token") };
+        }
+        /// <summary>
+        /// Method designed to obtain all the championships registered on the database
+        /// </summary>
+        /// <param name="token"><see cref="string"/> object that contains the admin unique token</param>
+        /// <param name="salt"><see cref="string"/> object that contains the salt needed for dencryption of the saved admin token</param>
+        /// <returns><see cref="HttpResponseMessage"/> object that contains an appropiate response to the state of the request made</returns>
+        public HttpResponseMessage allChampionshipsRequest(string token,string salt)
+        {
+            if(tools.verifyAdminToken(token,salt))
             {
-                currentChamp=null;
-            }
+                return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(JsonConvert.SerializeObject(dbContext.Championships.ToList()))};
 
-            if (currentChamp != null)
-            {
-                return new HttpResponseMessage(HttpStatusCode.OK){Content = new StringContent(JsonConvert.SerializeObject(currentChamp)) };
             }
-            return new HttpResponseMessage(HttpStatusCode.Conflict) { Content = new StringContent("There's no current championship for now") };
+            return new HttpResponseMessage(HttpStatusCode.Unauthorized) { Content = new StringContent("Invalid token") };
+        }
+        public HttpResponseMessage currentChampionRequest(string token,string salt)
+        {
+            if (tools.verifyAdminToken(token, salt))
+            {
+                Championship currentChamp;
+                try
+                {
+                    currentChamp = dbContext.Championships.FirstOrDefault(o => o.CurrentChamp == true);
+                }
+                catch (Exception ex)
+                {
+                    currentChamp = null;
+                }
+
+                if (currentChamp != null)
+                {
+                    return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(JsonConvert.SerializeObject(currentChamp)) };
+                }
+                return new HttpResponseMessage(HttpStatusCode.Conflict) { Content = new StringContent("There's no current championship for now") };
+            }
+            return new HttpResponseMessage(HttpStatusCode.Unauthorized) { Content = new StringContent("Invalid token") };
         }
     }
 }
