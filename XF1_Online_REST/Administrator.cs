@@ -23,6 +23,7 @@ namespace XF1_Online_REST
             this.Token = Token;
             this.Salt = Salt;
         }
+
         public string Username { get; set; }
         public string Role { get; set; }
         public string Password { get; set; }

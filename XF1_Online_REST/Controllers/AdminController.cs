@@ -19,7 +19,7 @@ namespace XFIA_REST.Controllers
         /// <returns><see cref="HttpStatusCode"/> object that contains the response and status code </returns>
 
         [Route("api/Admin/loginRequest")]
-        public HttpResponseMessage Get([FromBody] Administrator admin)
+        public HttpResponseMessage Post([FromBody] Administrator admin)
         {
             return logic.loginRequest(admin);
         }
