@@ -110,7 +110,14 @@ namespace XF1_Online_REST.LogicScript
             }
             return new HttpResponseMessage(HttpStatusCode.Unauthorized) { Content = new StringContent("Invalid token") };
         }
-        public HttpResponseMessage currentChampionRequest(string token,string salt)
+
+        /// <summary>
+        /// Method designed to fetch the current championship
+        /// </summary>
+        /// <param name="token"><see cref="string"/> object that contains the admin unique token</param>
+        /// <param name="salt"><see cref="string"/> object that contains the salt needed for dencryption of the saved admin token</param>
+        /// <returns><see cref="HttpResponseMessage"/> object that contains an appropiate response to the state of the request made</returns>
+        public HttpResponseMessage currentChampionshipRequest(string token,string salt)
         {
             if (tools.verifyAdminToken(token, salt))
             {
@@ -129,6 +136,14 @@ namespace XF1_Online_REST.LogicScript
                     return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(JsonConvert.SerializeObject(currentChamp)) };
                 }
                 return new HttpResponseMessage(HttpStatusCode.Conflict) { Content = new StringContent("There's no current championship for now") };
+            }
+            return new HttpResponseMessage(HttpStatusCode.Unauthorized) { Content = new StringContent("Invalid token") };
+        }
+        public HttpResponseMessage notCurrentChampionshipRequest(string token, string salt)
+        {
+            if (tools.verifyAdminToken(token, salt))
+            {
+                return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(JsonConvert.SerializeObject(dbContext.Championships.Where(o => o.CurrentChamp==false).ToList())) };
             }
             return new HttpResponseMessage(HttpStatusCode.Unauthorized) { Content = new StringContent("Invalid token") };
         }
