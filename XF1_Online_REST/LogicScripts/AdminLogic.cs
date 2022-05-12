@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -29,7 +30,8 @@ namespace XF1_Online_REST.LogicScripts
             {
                 string token = tools.getToken(admin.Salt);
                 tools.assignToken(admin, token);
-                return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(token) };
+                admin.Token = token;
+                return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(JsonConvert.SerializeObject(admin)) };
             }
             return new HttpResponseMessage(HttpStatusCode.Unauthorized) { Content = new StringContent("Incorrect username or password") };
         }
