@@ -39,35 +39,49 @@ namespace XF1_Online_REST.Controllers
         }
 
         /// <summary>
-        /// Controller designed to fetch the current championship by its Unique Key
+        /// Controller designed to fetch the current championship
         /// </summary>
-        /// <param name="champId"></param>
-        /// <param name="token"></param>
-        /// <param name="salt"></param>
-        /// <returns></returns>
+        /// <param name="token"><see cref="string"/> object that contains the admin unique token</param>
+        /// <param name="salt"><see cref="string"/> object that contains the salt needed for dencryption of the saved admin token</param>
+        /// <returns><see cref="HttpResponseMessage"/> object that contains an appropiate response to the state of the request made</returns>
         [Route("api/Championship/getCurrentChampionship/{token}/{salt}")]
         public HttpResponseMessage GetCurrent(string token, string salt)
         {
 
-            return logic.currentChampionRequest(token, salt);
+            return logic.currentChampionshipRequest(token, salt);
             
         }
 
+        /// <summary>
+        /// Controller designed to fetch the not current championships
+        /// </summary>
+        /// <param name="token"><see cref="string"/> object that contains the admin unique token</param>
+        /// <param name="salt"><see cref="string"/> object that contains the salt needed for dencryption of the saved admin token</param>
+        /// <returns><see cref="HttpResponseMessage"/> object that contains an appropiate response to the state of the request made</returns>
+        [Route("api/Championship/getNotCurrentChampionship/{token}/{salt}")]
+        public HttpResponseMessage GetNotCurrent(string token,string salt)
+        {
+            return logic.notCurrentChampionshipRequest(token, salt);
+        }
         
-
-    /// <summary>
-    /// Controller that allows to POST new championships
-    /// </summary>
-    /// <param name="champ"><see cref="Championship"/> object that contains the information of the championship to be added</param>
-    /// <param name="token"><see cref="string"/> object that contains the admin unique token</param>
-    /// <param name="salt"><see cref="string"/> object that contains the salt needed for dencryption of the saved admin token</param>
-    /// <returns><see cref="HttpResponseMessage"/> object that contains an appropiate response to the state of the request made</returns>
-    [Route("api/Championship/addChampionship/{token}/{salt}")]
+        /// <summary>
+        /// Controller that allows to POST new championships
+        /// </summary>
+        /// <param name="champ"><see cref="Championship"/> object that contains the information of the championship to be added</param>
+        /// <param name="token"><see cref="string"/> object that contains the admin unique token</param>
+        /// <param name="salt"><see cref="string"/> object that contains the salt needed for dencryption of the saved admin token</param>
+        /// <returns><see cref="HttpResponseMessage"/> object that contains an appropiate response to the state of the request made</returns>
+        [Route("api/Championship/addChampionship/{token}/{salt}")]
         public HttpResponseMessage Post([FromBody]Championship champ,string token,string salt)
         {
             return logic.championshipCreationRequest(champ,token,salt);
         }
 
+        [Route("api/Championship/temp end")]
+        public string GetTemp()
+        {
+            return "aja";
+        }
         // PUT: api/Championship/5
         public void Put(int id, [FromBody]string value)
         {
