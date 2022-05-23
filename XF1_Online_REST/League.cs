@@ -12,20 +12,21 @@ namespace XF1_Online_REST
     using System;
     using System.Collections.Generic;
     
-    public partial class Country
+    public partial class League
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Country()
+        public League()
         {
-            this.Races = new HashSet<Race>();
-            this.Players = new HashSet<Player>();
+            this.Scores = new HashSet<Score>();
         }
     
+        public string Unique_Key { get; set; }
+        public string Champ_Key { get; set; }
         public string Name { get; set; }
+        public string Type { get; set; }
     
+        public virtual Championship Championship { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Race> Races { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Player> Players { get; set; }
+        public virtual ICollection<Score> Scores { get; set; }
     }
 }

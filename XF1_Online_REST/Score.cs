@@ -12,8 +12,13 @@ namespace XF1_Online_REST
     using System;
     using System.Collections.Generic;
     
-    public partial class Status
+    public partial class Score
     {
-        public string Type { get; set; }
+        public string League_Key { get; set; }
+        public string Username { get; set; }
+        public int Points { get; set; }
+    
+        public virtual League League { get; set; }
+        public virtual Player Player { get; set; }
     }
 }

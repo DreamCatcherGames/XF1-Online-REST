@@ -12,8 +12,17 @@ namespace XF1_Online_REST
     using System;
     using System.Collections.Generic;
     
-    public partial class Status
+    public partial class Player
     {
-        public string Type { get; set; }
+        public string Username { get; set; }
+        public string Country { get; set; }
+        public string First_Name { get; set; }
+        public string Last_Name { get; set; }
+        public string Email { get; set; }
+        public decimal Money { get; set; }
+        public string Encrypted_Password { get; set; }
+        public string Salt { get; set; }
+        public string Token { get; set; }
+        public bool Active { get; set; }
     }
 }

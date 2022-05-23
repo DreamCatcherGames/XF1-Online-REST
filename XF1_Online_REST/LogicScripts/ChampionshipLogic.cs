@@ -36,7 +36,6 @@ namespace XF1_Online_REST.LogicScript
                     if (tools.championshipTimeVerifier(champ))
                     {
                         champ.Unique_Key = tools.getChampionshipKey();
-                        champ.Public_League_Name = champ.Name + " Public League";
                         champ.CurrentChamp = true;
 
                         try
@@ -48,6 +47,13 @@ namespace XF1_Online_REST.LogicScript
                             
                         }
                         dbContext.Championships.Add(champ);
+
+                        League publicLeague= new League();
+                        publicLeague.Name = champ.Name + " Public League";
+                        publicLeague.Champ_Key = champ.Unique_Key;
+                        publicLeague.Unique_Key= tools.getChampionshipKey();
+                        publicLeague.Type = "Public";
+                        dbContext.Leagues.Add(publicLeague);
 
                         dbContext.SaveChanges();
 

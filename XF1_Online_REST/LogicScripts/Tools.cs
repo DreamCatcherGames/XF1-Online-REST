@@ -54,13 +54,13 @@ namespace XF1_Online_REST.LogicScripts
         public Boolean uniqueTokenVerificator(string token,string salt)
         {
             string encryptedToken = encryptToken(token,salt);
-            return !dbContext.Administrators.Any(o => o.Token == encryptedToken);
+            return !dbContext.Administrators.Any(o => o.Token == encryptedToken)&&!dbContext.Players.Any(o=>o.Token==encryptedToken);
         }
 
         /// <summary>
         /// Method to assign a unique token to a <see cref="Administrator"/>/<see cref="User"/> inside the database
         /// </summary>
-        /// <param name="user"><see cref="Object"/> that contains the credentials of the <see cref="Administrator"/>/<see cref="User"/> that the token has to be assigned to</param>
+        /// <param name="user"><see cref="Object"/> that contains the credentials of the <see cref="Administrator"/>/<see cref="Player"/> that the token has to be assigned to</param>
         /// <param name="token"><see cref="string"/> that represents the token needed to be assigned</param>
         public void assignToken(Object user,string token)
         {
@@ -70,6 +70,12 @@ namespace XF1_Online_REST.LogicScripts
                 admin = dbContext.Administrators.Find(admin.Username);
                 admin.Token = encryptToken(token,admin.Salt);
                 
+            }
+            else if (user is Player)
+            {
+                Player player= (Player)user;
+                player = dbContext.Players.Find(player.Username);
+                player.Token = encryptToken(token,player.Salt);
             }
             dbContext.SaveChanges();
         }
@@ -197,7 +203,7 @@ namespace XF1_Online_REST.LogicScripts
         /// <returns><see cref="Boolean"/> value that indicates if the key provided is unique among the championship keys</returns>
         public Boolean uniqueChampionshipKeyVerificator(string key)
         {
-            return !dbContext.Championships.Any(o => o.Unique_Key == key);
+            return !dbContext.Championships.Any(o => o.Unique_Key == key)&&!dbContext.Leagues.Any(o=> o.Unique_Key==key);
         }
 
         /// <summary>

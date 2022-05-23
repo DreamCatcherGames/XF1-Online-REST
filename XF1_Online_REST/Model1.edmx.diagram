@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="a76e64a547ec4f90ace25f19f8aad9af" Name="Diagram1">
+      <Diagram DiagramId="a76e64a547ec4f90ace25f19f8aad9af" Name="Diagram1" ZoomLevel="87">
         <EntityTypeShape EntityType="XF1OnlineModel.Administrator" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="XF1OnlineModel.Championship" Width="1.5" PointX="0.75" PointY="1.5" IsExpanded="true" />
         <EntityTypeShape EntityType="XF1OnlineModel.Country" Width="1.5" PointX="0.75" PointY="5.125" IsExpanded="true" />
@@ -13,6 +13,13 @@
         <AssociationConnector Association="XF1OnlineModel.FK_ChampKey" ManuallyRouted="false" />
         <AssociationConnector Association="XF1OnlineModel.FK_Country" ManuallyRouted="false" />
         <AssociationConnector Association="XF1OnlineModel.FK_Status" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="XF1OnlineModel.League" Width="1.5" PointX="3" PointY="9.875" />
+        <EntityTypeShape EntityType="XF1OnlineModel.Player" Width="1.5" PointX="3" PointY="5.375" />
+        <EntityTypeShape EntityType="XF1OnlineModel.Score" Width="1.5" PointX="5.25" PointY="5.875" />
+        <AssociationConnector Association="XF1OnlineModel.FK_ChampKey_League" />
+        <AssociationConnector Association="XF1OnlineModel.FK_Country_Player" />
+        <AssociationConnector Association="XF1OnlineModel.FK_LeagueKey" />
+        <AssociationConnector Association="XF1OnlineModel.FK_Username" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -14,6 +14,12 @@ namespace XF1_Online_REST
     
     public partial class Championship
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Championship()
+        {
+            this.Leagues = new HashSet<League>();
+        }
+    
         public string Unique_Key { get; set; }
         public string Name { get; set; }
         public string Rules_Description { get; set; }
@@ -21,7 +27,9 @@ namespace XF1_Online_REST
         public System.TimeSpan Beginning_Time { get; set; }
         public System.DateTime Ending_Date { get; set; }
         public System.TimeSpan Ending_Time { get; set; }
-        public string Public_League_Name { get; set; }
         public bool CurrentChamp { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<League> Leagues { get; set; }
     }
 }
