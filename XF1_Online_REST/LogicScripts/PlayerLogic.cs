@@ -27,11 +27,17 @@ namespace XF1_Online_REST.LogicScripts
         public HttpResponseMessage loginRequest(Player player)
         {
             Player testPlayer = dbContext.Players.Find(player.Username);
+
+            Error_List errors= new Error_List();
+            errors.addError("Incorrect username or password",testPlayer==null);
+
             if (testPlayer == null)
             {
                 return new HttpResponseMessage(HttpStatusCode.Unauthorized) { Content = new StringContent("Incorrect username or password") };
             }
-            if (tools.verifyPassword(player.Encrypted_Password, testPlayer.Encrypted_Password, testPlayer.Salt))
+            Boolean correctPasswordCond = tools.verifyPassword(player.Encrypted_Password, testPlayer.Encrypted_Password, testPlayer.Salt);
+            errors.addError("Incorrect username or password",correctPasswordCond);
+            if (correctPasswordCond)
             {
                 string token = tools.getToken(player.Salt);
                 tools.assignToken(player, token);
@@ -40,7 +46,8 @@ namespace XF1_Online_REST.LogicScripts
                 player.Encrypted_Password = "";
                 return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(JsonConvert.SerializeObject(player)) };
             }
-            return new HttpResponseMessage(HttpStatusCode.Unauthorized) { Content = new StringContent("Incorrect username or password") };
+            errors.purgeErrorsList();
+            return new HttpResponseMessage(HttpStatusCode.Conflict) { Content = new StringContent(JsonConvert.SerializeObject(errors)) };
         }
 
         /// <summary>
@@ -50,27 +57,33 @@ namespace XF1_Online_REST.LogicScripts
         /// <returns><see cref="HttpStatusCode"/> object that contains the response and status code </returns>
         public HttpResponseMessage registerRequest(Player player)
         {
-            if(!dbContext.Players.Any(o=>o.Username==player.Username))
+            Error_List errors = new Error_List();
+            Boolean avaliableUsernameCond = !dbContext.Players.Any(o => o.Username == player.Username);
+            Boolean avaliableEmailCond = !dbContext.Players.Any(o => o.Email == player.Email);
+
+            errors.addError("Email already taken!", avaliableEmailCond);
+            errors.addError("Username already taken!", avaliableUsernameCond);
+            errors.purgeErrorsList();
+
+            if(errors.hasErrors())
             {
-                if(!dbContext.Players.Any(o=>o.Email==player.Email))
-                {
-                    player.Active = false;
-                    player.Money = 10000000;
+                player.Active = false;
+                player.Money = 10000000;
 
-                    List<string> passwordComponents = tools.passwordEncryptor(player.Encrypted_Password);
+                List<string> passwordComponents = tools.passwordEncryptor(player.Encrypted_Password);
 
-                    player.Encrypted_Password = passwordComponents[0];
-                    player.Salt=passwordComponents[1];
-                    player.Token=tools.getToken(player.Salt);
+                player.Encrypted_Password = passwordComponents[0];
+                player.Salt=passwordComponents[1];
+                player.Token=tools.getToken(player.Salt);
 
-                    dbContext.Players.Add(player);
-                    dbContext.SaveChanges();
+                dbContext.Players.Add(player);
+                dbContext.SaveChanges();
 
-                    return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("Player registered succesfully! Please check your email")};
-                }
-                return new HttpResponseMessage(HttpStatusCode.Conflict) { Content = new StringContent("Email already taken!") };
+                tools.sendEmail(player);
+
+                return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("Player registered succesfully! Please check your email")};
             }
-            return new HttpResponseMessage(HttpStatusCode.Conflict) { Content = new StringContent("Username already taken!") };
+            return new HttpResponseMessage(HttpStatusCode.Conflict) { Content = new StringContent(JsonConvert.SerializeObject(errors)) };
         }
     }
 }

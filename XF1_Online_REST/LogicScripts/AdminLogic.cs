@@ -26,9 +26,11 @@ namespace XF1_Online_REST.LogicScripts
         public HttpResponseMessage loginRequest(Administrator admin)
         {
             Administrator testAdmin = dbContext.Administrators.Find(admin.Username);
+            Error_List error = new Error_List("Incorrect username or password");
             if (testAdmin==null)
             {
-                return new HttpResponseMessage(HttpStatusCode.Unauthorized) { Content = new StringContent("Incorrect username or password") };
+                
+                return new HttpResponseMessage(HttpStatusCode.Unauthorized) { Content = new StringContent(JsonConvert.SerializeObject(error)) };
             }
             if (tools.verifyPassword(admin.Encrypted_Password, testAdmin.Encrypted_Password, testAdmin.Salt))
             {
@@ -36,9 +38,10 @@ namespace XF1_Online_REST.LogicScripts
                 tools.assignToken(admin, token);
                 admin = dbContext.Administrators.Find(admin.Username);
                 admin.Token = token;
+                admin.Encrypted_Password = "";
                 return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(JsonConvert.SerializeObject(admin)) };
             }
-            return new HttpResponseMessage(HttpStatusCode.Unauthorized) { Content = new StringContent("Incorrect username or password") };
+            return new HttpResponseMessage(HttpStatusCode.Unauthorized) { Content = new StringContent(JsonConvert.SerializeObject(error)) };
         }
 
 

@@ -23,26 +23,5 @@ namespace XFIA_REST.Controllers
         {
             return logic.loginRequest(admin);
         }
-
-        [Route("api/Admin/test")]
-        public string Get()
-        {
-            return "Hola Zeledon";
-        }
-
-        // POST: api/Admin
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT: api/Admin/5
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE: api/Admin/5
-        public void Delete(int id)
-        {
-        }
     }
 }

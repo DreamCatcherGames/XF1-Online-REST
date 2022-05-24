@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Security.Cryptography;
 using System.Web;
 using XF1_Online_REST;
@@ -16,14 +18,30 @@ namespace XF1_Online_REST.LogicScripts
         }
 
         /// <summary>
-        /// Method to get an unique token
+        /// Method to get an unique token for a Player or Administrator
         /// </summary>
-        /// <returns><see cref="string"/> object that represents a unique code </returns>
+        /// <returns><see cref="string"/> object that represents a unique token </returns>
         public string getToken(string salt)
         {
             string token = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
             token = token.Replace("+", "").Replace("/", "");
             while (!uniqueTokenVerificator(token,salt))
+            {
+                token = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
+                token = token.Replace("+", "").Replace("/", "");
+            }
+            return token;
+        }
+
+        /// <summary>
+        /// Method to get an unique token
+        /// </summary>
+        /// <returns><see cref="string"/> object that represents a unique token </returns>
+        public string generateVerificationToken()
+        {
+            string token = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
+            token = token.Replace("+", "").Replace("/", "");
+            while (dbContext.Verification_Request.Any(o=>o.Token==token))
             {
                 token = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
                 token = token.Replace("+", "").Replace("/", "");
@@ -133,28 +151,41 @@ namespace XF1_Online_REST.LogicScripts
         /// </summary>
         /// <param name="race"><see cref="Race"/> object that contains all the  information to be analyzed</param>
         /// <returns><see cref="Boolean"/> object that tells if the dates of the date provided are Ok</returns>
-        public Boolean raceDateVerifier(Race race)
+        public Error_List raceDateVerifier(Race race)
         {
             Championship champ = dbContext.Championships.Find(race.Champ_Key);
+
+            Error_List errors = new Error_List();
+
             DateTime actualDate=DateTime.Now;
             Boolean validDatesCond=race.Beginning_Date>=actualDate&&race.Ending_Date>=actualDate;
-            Boolean consistencyCond = race.Beginning_Date < race.Ending_Date && race.Qualification_Date < race.Competition_Date;
             Boolean insideChampionshipCond = containedDateValidation(race.Beginning_Date, race.Ending_Date,champ.Beginning_Date,champ.Ending_Date);
             Boolean insideValidDateRangeCond = containedDateValidation(race.Qualification_Date,race.Competition_Date,race.Beginning_Date,race.Ending_Date);
 
-            if(consistencyCond&&insideChampionshipCond&&validDatesCond&&insideValidDateRangeCond)
+            errors.addError("The beggining/ending date of the race is past to the present date", validDatesCond);
+            errors.addError("The ending date of the race is past it's beggining date", race.Beginning_Date < race.Ending_Date);
+            errors.addError("The Qualification date of the race is past it's Competition date", race.Qualification_Date < race.Competition_Date);
+            errors.addError("The race beginning/ending date is outside it's championship timeline", insideChampionshipCond);
+            errors.addError("The race qualification/competition date is outside it's championship timeline",insideValidDateRangeCond);
+
+            errors.purgeErrorsList();
+
+            if(!errors.hasErrors())
             {
                 List<Race> races = dbContext.Races.Where(o => o.Champ_Key==champ.Unique_Key).ToList<Race>();
                 foreach(Race raceT in races)
                 {
-                    if(raceDateBumpVerification(race,raceT))
+                    Error_List raceDateBumpErrors = raceDateBumpVerification(race, raceT);
+                    raceDateBumpErrors.purgeErrorsList();
+                    if (raceDateBumpErrors.hasErrors())
                     {
-                        return false;
+                        errors.fuse(raceDateBumpErrors);
+                        break;
                     }
                 }
-                return true;
             }
-            return false;
+            errors.purgeErrorsList();
+            return errors;
         }
         /// <summary>
         /// Method to verify if there's any kind of intersection between two races date range.
@@ -162,15 +193,19 @@ namespace XF1_Online_REST.LogicScripts
         /// <param name="race1"><see cref="Race"/> object that contains the date range of the first race to be analyzed</param>
         /// <param name="race2"><see cref="Race"/> object that contains the date range of the second race to be analyzed</param>
         /// <returns></returns>
-        public Boolean raceDateBumpVerification(Race race1,Race race2)
+        public Error_List raceDateBumpVerification(Race race1,Race race2)
         {
+            Error_List errors= new Error_List();
             Boolean intersectionCond = intersectionDateValidation(race1.Beginning_Date, race1.Ending_Date, race2.Beginning_Date, race2.Ending_Date)||
                                        intersectionDateValidation(race2.Beginning_Date, race2.Ending_Date, race1.Beginning_Date, race1.Ending_Date);
 
             Boolean containerCond = containedDateValidation(race1.Beginning_Date, race1.Ending_Date, race2.Beginning_Date, race2.Ending_Date) ||
                                     containedDateValidation(race2.Beginning_Date, race2.Ending_Date, race1.Beginning_Date, race1.Ending_Date);
 
-            return intersectionCond || containerCond;
+            errors.addError("The race beginning/ending date is inside another race timeline", intersectionCond);
+            errors.addError("The race timeline is inside another race timeline or it contains another race timeline", containerCond);
+
+            return errors;
         }
 
 
@@ -210,14 +245,22 @@ namespace XF1_Online_REST.LogicScripts
         /// Method made to determine if the date of a new championship is valid and that it doesn't intersects with another championship dates.
         /// </summary>
         /// <param name="champ"><see cref="Championship"/> object that contains all the data of the championship to evaluate</param>
-        /// <returns><see cref="Boolean"/> object that tells if the dates of the championship are valid</returns>
-        public Boolean championshipDateVerifier(Championship champ)
+        /// <returns><see cref="Error_List"/> object that contains all the possible errors related to a championship dates</returns>
+        public Error_List championshipDateVerifier(Championship champ)
         {
             DateTime actualDate = DateTime.Now;
+
+            Error_List errors = new Error_List();
+
             Boolean validDatesCond = !(champ.Beginning_Date <= actualDate || champ.Ending_Date < actualDate);
             Boolean consistentDatesCond= champ.Beginning_Date < champ.Ending_Date;
+            Boolean validChampionshipCond= validChampionship(champ);
 
-            if (validDatesCond && consistentDatesCond)
+            errors.addError("The beginning/ending date of the championship is past to the present date",validDatesCond);
+            errors.addError("The ending date of the championship is past to it's beginning date", consistentDatesCond);
+            errors.addError("The championship that is being created is before the ending date of the current championship",validChampionshipCond);
+
+            if (errors.hasErrors())
             {
                 List<Championship> championships = dbContext.Championships.ToList();
                 int length = championships.Count;
@@ -233,11 +276,12 @@ namespace XF1_Online_REST.LogicScripts
 
                     if (intersectionCond || containedCond)
                     {
-                        return false;
+                        errors.addError("The championship beggining/ending date is inside of the timeline of another registered championship",!intersectionCond);
+                        errors.addError("The championship timeline is totally inside of another championship timeline or contains another championship timeline", !containedCond);
                     }
                 }
             }
-            return validDatesCond && consistentDatesCond && validChampionship(champ);
+            return errors;
         }
         /// <summary>
         /// Method to determine if two date range intersect.
@@ -292,6 +336,34 @@ namespace XF1_Online_REST.LogicScripts
                 return true;
             }
             return currentChampionship.Ending_Date <= champ.Beginning_Date;
+        }
+
+        public void sendEmail(Player player)
+        {
+            MailMessage mail = new MailMessage();
+            SmtpClient smtpServer = new SmtpClient("smtp.gmail.com");
+            mail.From = new MailAddress("xf1online2022@gmail.com", "XF1 Team");
+            mail.To.Add(player.Email);
+
+            Verification_Request request= new Verification_Request();
+            request.Username=player.Username;
+            request.Token = generateVerificationToken();
+
+            mail.Subject = "Email Confirmation";
+            mail.Body = "Hi " + player.First_Name + "! We are thrilled that you're joining us to experience the ultimate F1 fantasy game: XF1 Online!\n\n" +
+                        "Click on the next link to confirm your email: \n\n" +
+                        "https://dreamcatchergames.github.io/XF1-online/emailVerification/" + request.Token+"\n\n" +
+                        "See you on the track!\n\n" +
+                        "XF1 Team.";
+            
+            smtpServer.Port = 587;
+            smtpServer.Credentials = new NetworkCredential("xf1online2022@gmail.com", "W4<b^UZd9");
+            smtpServer.EnableSsl = true;
+
+            smtpServer.SendMailAsync(mail);
+
+            dbContext.Verification_Request.Add(request);
+            dbContext.SaveChanges();
         }
     }
 }

@@ -12,23 +12,11 @@ namespace XF1_Online_REST
     using System;
     using System.Collections.Generic;
     
-    public partial class Administrator
+    public partial class Verification_Request
     {
-        public Administrator()
-        {
-
-        }
-        public Administrator(string username,string password,string token,string salt)
-        {
-            this.Username=username;
-            this.Encrypted_Password=password;
-            this.Token=token;  
-            this.Salt=salt;
-        }
-        public string Username { get; set; }
-        public string Role { get; set; }
-        public string Salt { get; set; }
         public string Token { get; set; }
-        public string Encrypted_Password { get; set; }
+        public string Username { get; set; }
+    
+        public virtual Player Player { get; set; }
     }
 }

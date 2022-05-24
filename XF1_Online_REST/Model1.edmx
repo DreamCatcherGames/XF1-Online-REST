@@ -91,6 +91,13 @@
           </Key>
           <Property Name="Type" Type="varchar" MaxLength="30" Nullable="false" />
         </EntityType>
+        <EntityType Name="Verification_Request">
+          <Key>
+            <PropertyRef Name="Token" />
+          </Key>
+          <Property Name="Token" Type="varchar" MaxLength="32" Nullable="false" />
+          <Property Name="Username" Type="varchar" MaxLength="30" Nullable="false" />
+        </EntityType>
         <Association Name="FK_ChampKey">
           <End Role="Championship" Type="Self.Championship" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -187,6 +194,20 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Verification_Username">
+          <End Role="Player" Type="Self.Player" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Verification_Request" Type="Self.Verification_Request" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Player">
+              <PropertyRef Name="Username" />
+            </Principal>
+            <Dependent Role="Verification_Request">
+              <PropertyRef Name="Username" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="XF1OnlineModelStoreContainer">
           <EntitySet Name="Administrator" EntityType="Self.Administrator" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Championship" EntityType="Self.Championship" Schema="dbo" store:Type="Tables" />
@@ -196,6 +217,7 @@
           <EntitySet Name="Race" EntityType="Self.Race" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Score" EntityType="Self.Score" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Status" EntityType="Self.Status" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Verification_Request" EntityType="Self.Verification_Request" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_ChampKey" Association="Self.FK_ChampKey">
             <End Role="Championship" EntitySet="Championship" />
             <End Role="Race" EntitySet="Race" />
@@ -223,6 +245,10 @@
           <AssociationSet Name="FK_Username" Association="Self.FK_Username">
             <End Role="Player" EntitySet="Player" />
             <End Role="Score" EntitySet="Score" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Verification_Username" Association="Self.FK_Verification_Username">
+            <End Role="Player" EntitySet="Player" />
+            <End Role="Verification_Request" EntitySet="Verification_Request" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -362,6 +388,11 @@
             <End Role="Player" EntitySet="Players" />
             <End Role="Score" EntitySet="Scores" />
           </AssociationSet>
+          <EntitySet Name="Verification_Request" EntityType="XF1OnlineModel.Verification_Request" />
+          <AssociationSet Name="FK_Verification_Username" Association="XF1OnlineModel.FK_Verification_Username">
+            <End Role="Player" EntitySet="Players" />
+            <End Role="Verification_Request" EntitySet="Verification_Request" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="League">
           <Key>
@@ -388,6 +419,7 @@
           <Property Name="Salt" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="false" />
           <Property Name="Token" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="false" />
           <Property Name="Active" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Verification_Request" Relationship="XF1OnlineModel.FK_Verification_Username" FromRole="Player" ToRole="Verification_Request" />
         </EntityType>
         <EntityType Name="Score">
           <Key>
@@ -452,6 +484,28 @@
               <PropertyRef Name="Username" />
             </Principal>
             <Dependent Role="Score">
+              <PropertyRef Name="Username" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Verification_Request">
+          <Key>
+            <PropertyRef Name="Token" />
+          </Key>
+          <Property Name="Token" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="Username" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Player" Relationship="XF1OnlineModel.FK_Verification_Username" FromRole="Verification_Request" ToRole="Player" />
+        </EntityType>
+        <Association Name="FK_Verification_Username">
+          <End Type="XF1OnlineModel.Player" Role="Player" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="XF1OnlineModel.Verification_Request" Role="Verification_Request" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Player">
+              <PropertyRef Name="Username" />
+            </Principal>
+            <Dependent Role="Verification_Request">
               <PropertyRef Name="Username" />
             </Dependent>
           </ReferentialConstraint>
@@ -550,6 +604,14 @@
                 <ScalarProperty Name="Points" ColumnName="Points" />
                 <ScalarProperty Name="Username" ColumnName="Username" />
                 <ScalarProperty Name="League_Key" ColumnName="League_Key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Verification_Request">
+            <EntityTypeMapping TypeName="XF1OnlineModel.Verification_Request">
+              <MappingFragment StoreEntitySet="Verification_Request">
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Token" ColumnName="Token" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

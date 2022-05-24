@@ -20,6 +20,9 @@
         <AssociationConnector Association="XF1OnlineModel.FK_Country_Player" />
         <AssociationConnector Association="XF1OnlineModel.FK_LeagueKey" />
         <AssociationConnector Association="XF1OnlineModel.FK_Username" />
+        <AssociationConnector Association="XF1OnlineModel.FK_Verification_Username" />
+        <EntityTypeShape EntityType="XF1OnlineModel.Verification_Request" Width="1.5" PointX="5.25" PointY="9.125" />
+        <AssociationConnector Association="XF1OnlineModel.FK_Verification_Username" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
