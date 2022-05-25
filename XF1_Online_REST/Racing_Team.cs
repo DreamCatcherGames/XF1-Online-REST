@@ -14,21 +14,9 @@ namespace XF1_Online_REST
     
     public partial class Racing_Team
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Racing_Team()
-        {
-            this.Pilots = new HashSet<Pilot>();
-            this.Teams = new HashSet<Team>();
-        }
-    
         public string Name { get; set; }
         public string Country { get; set; }
         public decimal Price { get; set; }
         public string Photo { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Pilot> Pilots { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Team> Teams { get; set; }
     }
 }

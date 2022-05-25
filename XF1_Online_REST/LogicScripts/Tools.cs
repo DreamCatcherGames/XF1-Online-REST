@@ -103,10 +103,14 @@ namespace XF1_Online_REST.LogicScripts
         /// </summary>
         /// <param name="token"><see cref="string"/> object that represents the token needed to be verified</param>
         /// <returns><see cref="Boolean"/> object that determines if the token was found</returns>
-        public Boolean verifyAdminToken(string token,string salt)
+        public Boolean verifyToken(string token,string salt,string type)
         {
             string tempToken=encryptToken(token,salt);
-            return dbContext.Administrators.Any(o => o.Token == tempToken);
+            if (type == "Administrator")
+            {
+                return dbContext.Administrators.Any(o => o.Token == tempToken);
+            }
+            return dbContext.Players.Any(o => o.Token == tempToken);
         }
 
         /// <summary>
@@ -364,6 +368,11 @@ namespace XF1_Online_REST.LogicScripts
 
             dbContext.Verification_Request.Add(request);
             dbContext.SaveChanges();
+        }
+
+        public Boolean verifyTeamName(Racing_Team team)
+        {
+            return !dbContext.Racing_Team.Any(o => o.Name == team.Name);
         }
     }
 }

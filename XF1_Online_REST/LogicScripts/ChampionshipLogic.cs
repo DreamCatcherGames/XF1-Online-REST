@@ -30,7 +30,7 @@ namespace XF1_Online_REST.LogicScript
         public HttpResponseMessage championshipCreationRequest(Championship champ,string token,string salt,Boolean dummy)
         {
             Error_List errors = new Error_List();
-            errors.addError("Invalid token", tools.verifyAdminToken(token, salt));
+            errors.addError("Invalid token", tools.verifyToken(token, salt, "Administrator"));
             if (!errors.hasErrors())
             {
                 errors.fuse(tools.championshipDateVerifier(champ));
@@ -83,7 +83,7 @@ namespace XF1_Online_REST.LogicScript
         public HttpResponseMessage championshipDeletionRequest(string champId,string token,string salt)
         {
             Error_List errors = new Error_List();
-            errors.addError("Invalid token", tools.verifyAdminToken(token, salt));
+            errors.addError("Invalid token", tools.verifyToken(token, salt, "Administrator"));
             if (!errors.hasErrors())
             {
                 Championship champ = dbContext.Championships.Find(champId);
@@ -102,7 +102,7 @@ namespace XF1_Online_REST.LogicScript
         public HttpResponseMessage championshipRequest(string champId,string token,string salt)
         {
             Error_List errors = new Error_List();
-            errors.addError("Invalid token", tools.verifyAdminToken(token, salt));
+            errors.addError("Invalid token", tools.verifyToken(token, salt, "Administrator"));
             if (!errors.hasErrors())
             { 
                 Championship champ= dbContext.Championships.Find(champId);
@@ -125,7 +125,7 @@ namespace XF1_Online_REST.LogicScript
         public HttpResponseMessage allChampionshipsRequest(string token,string salt)
         {
             Error_List errors = new Error_List();
-            errors.addError("Invalid token", tools.verifyAdminToken(token, salt));
+            errors.addError("Invalid token", tools.verifyToken(token, salt, "Administrator"));
             if (!errors.hasErrors())
             {
                 return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(JsonConvert.SerializeObject(dbContext.Championships.ToList()))};
@@ -143,7 +143,7 @@ namespace XF1_Online_REST.LogicScript
         public HttpResponseMessage currentChampionshipRequest(string token,string salt)
         {
             Error_List errors = new Error_List();
-            errors.addError("Invalid token", tools.verifyAdminToken(token, salt));
+            errors.addError("Invalid token", tools.verifyToken(token, salt, "Administrator"));
             if (!errors.hasErrors())
             {
                 Championship currentChamp;
@@ -163,17 +163,17 @@ namespace XF1_Online_REST.LogicScript
                 }
             }
             errors.purgeErrorsList();
-            return new HttpResponseMessage(HttpStatusCode.Unauthorized) { Content = new StringContent(JsonConvert.SerializeObject(errors)) };
+            return new HttpResponseMessage(HttpStatusCode.Conflict) { Content = new StringContent(JsonConvert.SerializeObject(errors)) };
         }
         public HttpResponseMessage notCurrentChampionshipRequest(string token, string salt)
         {
             Error_List errors = new Error_List();
-            errors.addError("Invalid token", tools.verifyAdminToken(token, salt));
+            errors.addError("Invalid token", tools.verifyToken(token, salt, "Administrator"));
             if (!errors.hasErrors())
             {
                 return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(JsonConvert.SerializeObject(dbContext.Championships.Where(o => o.CurrentChamp==false).ToList())) };
             }
-            return new HttpResponseMessage(HttpStatusCode.Unauthorized) { Content = new StringContent(JsonConvert.SerializeObject(errors)) };
+            return new HttpResponseMessage(HttpStatusCode.Conflict) { Content = new StringContent(JsonConvert.SerializeObject(errors)) };
         }
     }
 }

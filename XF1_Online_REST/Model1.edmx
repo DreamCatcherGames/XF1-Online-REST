@@ -43,7 +43,7 @@
           </Key>
           <Property Name="Name" Type="varchar" MaxLength="30" Nullable="false" />
           <Property Name="Racing_Team" Type="varchar" MaxLength="30" Nullable="false" />
-          <Property Name="Price" Type="numeric" Precision="6" Scale="2" Nullable="false" />
+          <Property Name="Price" Type="numeric" Precision="8" Scale="2" Nullable="false" />
           <Property Name="Photo" Type="varchar" MaxLength="200" Nullable="false" />
         </EntityType>
         <EntityType Name="Player">
@@ -56,7 +56,7 @@
           <Property Name="First_Name" Type="varchar" MaxLength="30" Nullable="false" />
           <Property Name="Last_Name" Type="varchar" MaxLength="30" Nullable="false" />
           <Property Name="Email" Type="varchar" MaxLength="30" Nullable="false" />
-          <Property Name="Money" Type="numeric" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="Money" Type="numeric" Precision="12" Scale="2" Nullable="false" />
           <Property Name="Encrypted_Password" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Salt" Type="varchar" MaxLength="32" Nullable="false" />
           <Property Name="Token" Type="varchar" MaxLength="32" Nullable="false" />
@@ -85,7 +85,7 @@
           </Key>
           <Property Name="Name" Type="varchar" MaxLength="30" Nullable="false" />
           <Property Name="Country" Type="varchar" MaxLength="30" Nullable="false" />
-          <Property Name="Price" Type="numeric" Precision="6" Scale="2" Nullable="false" />
+          <Property Name="Price" Type="numeric" Precision="8" Scale="2" Nullable="false" />
           <Property Name="Photo" Type="varchar" MaxLength="200" Nullable="false" />
         </EntityType>
         <EntityType Name="Score">
@@ -110,7 +110,7 @@
           </Key>
           <Property Name="Name" Type="varchar" MaxLength="30" Nullable="false" />
           <Property Name="Username" Type="varchar" MaxLength="30" Nullable="false" />
-          <Property Name="Racing_Team_Name" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="Racing_Team_Name" Type="varchar" MaxLength="30" />
         </EntityType>
         <EntityType Name="Team_Pilot">
           <Key>
@@ -226,9 +226,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Team_Racing_Team">
-          <End Role="Racing_Team" Type="Self.Racing_Team" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
+          <End Role="Racing_Team" Type="Self.Racing_Team" Multiplicity="0..1" />
           <End Role="Team" Type="Self.Team" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Racing_Team">
@@ -386,7 +384,7 @@
           </Key>
           <Property Name="Name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Racing_Team" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Price" Type="Decimal" Precision="6" Scale="2" Nullable="false" />
+          <Property Name="Price" Type="Decimal" Precision="8" Scale="2" Nullable="false" />
           <Property Name="Photo" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="Racing_Team1" Relationship="Self.FK_Pilot_Racing_Team" FromRole="Pilot" ToRole="Racing_Team" />
           <NavigationProperty Name="Teams" Relationship="Self.Team_Pilot" FromRole="Pilot" ToRole="Team" />
@@ -401,7 +399,7 @@
           <Property Name="First_Name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Last_Name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Email" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Money" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="Money" Type="Decimal" Precision="12" Scale="2" Nullable="false" />
           <Property Name="Encrypted_Password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Salt" Type="String" MaxLength="32" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Token" Type="String" MaxLength="32" FixedLength="false" Unicode="false" Nullable="false" />
@@ -435,10 +433,8 @@
           </Key>
           <Property Name="Name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Country" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Price" Type="Decimal" Precision="6" Scale="2" Nullable="false" />
+          <Property Name="Price" Type="Decimal" Precision="8" Scale="2" Nullable="false" />
           <Property Name="Photo" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Pilots" Relationship="Self.FK_Pilot_Racing_Team" FromRole="Racing_Team" ToRole="Pilot" />
-          <NavigationProperty Name="Teams" Relationship="Self.FK_Team_Racing_Team" FromRole="Racing_Team" ToRole="Team" />
         </EntityType>
         <EntityType Name="Score">
           <Key>
@@ -465,7 +461,7 @@
           </Key>
           <Property Name="Name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Username" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Racing_Team_Name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Racing_Team_Name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Player" Relationship="Self.FK_Team_Username" FromRole="Team" ToRole="Player" />
           <NavigationProperty Name="Racing_Team" Relationship="Self.FK_Team_Racing_Team" FromRole="Team" ToRole="Racing_Team" />
           <NavigationProperty Name="Pilots" Relationship="Self.Team_Pilot" FromRole="Team" ToRole="Pilot" />
@@ -589,9 +585,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Team_Racing_Team">
-          <End Role="Racing_Team" Type="Self.Racing_Team" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
+          <End Role="Racing_Team" Type="Self.Racing_Team" Multiplicity="0..1" />
           <End Role="Team" Type="Self.Team" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Racing_Team">
