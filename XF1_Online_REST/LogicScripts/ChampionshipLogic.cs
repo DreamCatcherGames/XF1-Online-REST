@@ -27,7 +27,7 @@ namespace XF1_Online_REST.LogicScript
         /// <param name="token"><see cref="string"/> object that contains the admin unique token</param>
         /// <param name="salt"><see cref="string"/> object that contains the salt needed for dencryption of the saved admin token</param>
         /// <returns><see cref="HttpResponseMessage"/> object that contains an appropiate response to the state of the request made</returns>
-        public HttpResponseMessage championshipCreationRequest(Championship champ,string token,string salt)
+        public HttpResponseMessage championshipCreationRequest(Championship champ,string token,string salt,Boolean dummy)
         {
             Error_List errors = new Error_List();
             errors.addError("Invalid token", tools.verifyAdminToken(token, salt));
@@ -42,11 +42,16 @@ namespace XF1_Online_REST.LogicScript
                 if (!errors.hasErrors())
                 {
                     champ.Unique_Key = tools.getChampionshipKey();
-                    champ.CurrentChamp = true;
-
+                    if (!dummy)
+                    {
+                        champ.CurrentChamp = true;
+                    }
                     try
                     {
-                        dbContext.Championships.First(o => o.CurrentChamp == true).CurrentChamp = false;
+                        if (!dummy)
+                        {
+                            dbContext.Championships.First(o => o.CurrentChamp == true).CurrentChamp = false;
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -57,7 +62,7 @@ namespace XF1_Online_REST.LogicScript
                     League publicLeague = new League();
                     publicLeague.Name = champ.Name + " Public League";
                     publicLeague.Champ_Key = champ.Unique_Key;
-                    publicLeague.Unique_Key = tools.getChampionshipKey();
+                    publicLeague.Unique_Key = champ.Unique_Key;
                     publicLeague.Type = "Public";
                     dbContext.Leagues.Add(publicLeague);
 

@@ -86,7 +86,7 @@ namespace XF1_Online_REST.LogicScript
             {
                 errors.fuse(tools.raceDateVerifier(race));
                 errors.purgeErrorsList();
-                if (errors.hasErrors())
+                if (!errors.hasErrors())
                 {
                     if(race.Status==null)
                     {

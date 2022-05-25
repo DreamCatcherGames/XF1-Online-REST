@@ -188,6 +188,7 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="LogicScripts\Error_List.cs" />
+    <Compile Include="LogicScripts\LeagueLogic.cs" />
     <Compile Include="LogicScripts\PlayerLogic.cs" />
     <Compile Include="LogicScripts\RaceLogic.cs" />
     <Compile Include="LogicScripts\ChampionshipLogic.cs" />

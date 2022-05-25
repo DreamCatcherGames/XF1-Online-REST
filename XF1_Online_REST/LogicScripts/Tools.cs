@@ -260,7 +260,7 @@ namespace XF1_Online_REST.LogicScripts
             errors.addError("The ending date of the championship is past to it's beginning date", consistentDatesCond);
             errors.addError("The championship that is being created is before the ending date of the current championship",validChampionshipCond);
 
-            if (errors.hasErrors())
+            if (!errors.hasErrors())
             {
                 List<Championship> championships = dbContext.Championships.ToList();
                 int length = championships.Count;
@@ -276,7 +276,7 @@ namespace XF1_Online_REST.LogicScripts
 
                     if (intersectionCond || containedCond)
                     {
-                        errors.addError("The championship beggining/ending date is inside of the timeline of another registered championship",!intersectionCond);
+                        errors.addError("The championship beginning/ending date is inside of the timeline of another registered championship",!intersectionCond);
                         errors.addError("The championship timeline is totally inside of another championship timeline or contains another championship timeline", !containedCond);
                     }
                 }
