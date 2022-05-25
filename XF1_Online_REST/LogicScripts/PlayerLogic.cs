@@ -65,7 +65,7 @@ namespace XF1_Online_REST.LogicScripts
             errors.addError("Username already taken!", avaliableUsernameCond);
             errors.purgeErrorsList();
 
-            if(errors.hasErrors())
+            if(!errors.hasErrors())
             {
                 player.Active = false;
                 player.Money = 10000000;
