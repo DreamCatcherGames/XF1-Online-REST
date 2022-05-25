@@ -17,7 +17,7 @@ namespace TestSuite
         {
             Administrator admin = new Administrator();
             admin.Username = "loginTestAdmin";
-            admin.Password = "admin1234";
+            admin.Encrypted_Password = "admin1234";
 
             HttpResponseMessage response=logic.loginRequest(admin);
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
@@ -27,7 +27,7 @@ namespace TestSuite
         {
             Administrator admin = new Administrator();
             admin.Username = "loginTestAdmin";
-            admin.Password = "admin123";
+            admin.Encrypted_Password = "admin123";
 
 
             HttpResponseMessage response = logic.loginRequest(admin);

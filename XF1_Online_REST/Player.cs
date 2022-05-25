@@ -12,20 +12,26 @@ namespace XF1_Online_REST
     using System;
     using System.Collections.Generic;
     
-    public partial class Country
+    public partial class Player
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Country()
+        public Player()
         {
-            this.Races = new HashSet<Race>();
-            this.Players = new HashSet<Player>();
+            this.Verification_Request = new HashSet<Verification_Request>();
         }
     
-        public string Name { get; set; }
+        public string Username { get; set; }
+        public string Country { get; set; }
+        public string First_Name { get; set; }
+        public string Last_Name { get; set; }
+        public string Email { get; set; }
+        public decimal Money { get; set; }
+        public string Encrypted_Password { get; set; }
+        public string Salt { get; set; }
+        public string Token { get; set; }
+        public bool Active { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Race> Races { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Player> Players { get; set; }
+        public virtual ICollection<Verification_Request> Verification_Request { get; set; }
     }
 }

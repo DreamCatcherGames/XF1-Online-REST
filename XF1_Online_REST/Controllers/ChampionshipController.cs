@@ -74,7 +74,7 @@ namespace XF1_Online_REST.Controllers
         [Route("api/Championship/addChampionship/{token}/{salt}")]
         public HttpResponseMessage Post([FromBody]Championship champ,string token,string salt)
         {
-            return logic.championshipCreationRequest(champ,token,salt);
+            return logic.championshipCreationRequest(champ,token,salt,false);
         }
 
         [Route("api/Championship/temp end")]

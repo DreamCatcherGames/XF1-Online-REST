@@ -12,8 +12,11 @@ namespace XF1_Online_REST
     using System;
     using System.Collections.Generic;
     
-    public partial class Status
+    public partial class Verification_Request
     {
-        public string Type { get; set; }
+        public string Token { get; set; }
+        public string Username { get; set; }
+    
+        public virtual Player Player { get; set; }
     }
 }

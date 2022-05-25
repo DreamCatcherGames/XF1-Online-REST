@@ -12,7 +12,7 @@ namespace TestSuite
     public class ChampionshipTests
     {
         ChampionshipLogic logic = new ChampionshipLogic();
-        Administrator admin= new Administrator("champTestAdmin","admin1234", "dkQhxuDOS02Z1jZJ2KRpng==", "YGXMKyXDIemAKw==");
+        Administrator admin= new Administrator("champTestAdmin","admin1234", "xti00gezkuEvPgAtgwAKg==", "YGXMKyXDIemAKw==");
         Championship champ1 = new Championship();
         Championship champ2 = new Championship();
         /// <summary>
@@ -22,8 +22,8 @@ namespace TestSuite
         public void badTokenChampionshipCreationRequestTest()
         {
             Championship champ = new Championship();
-            HttpResponseMessage response = logic.championshipCreationRequest(champ,"badToken","badSalt");
-            Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
+            HttpResponseMessage response = logic.championshipCreationRequest(champ,"badToken","badSalt",true);
+            Assert.AreEqual(HttpStatusCode.Conflict, response.StatusCode);
 
         }
         
@@ -40,11 +40,36 @@ namespace TestSuite
             champ1.Ending_Date = new DateTime(2023,12,31);
             champ1.Ending_Time = new TimeSpan(23,59,59);
 
-            HttpResponseMessage response = logic.championshipCreationRequest(champ1, admin.Token, admin.Salt);
+            HttpResponseMessage response = logic.championshipCreationRequest(champ1, admin.Token, admin.Salt,true);
             logic.championshipDeletionRequest(champ1.Unique_Key, admin.Token, admin.Salt);
 
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
+
+
+        /// <summary>
+        /// Test method designed to assert when the public league of a championship exists
+        /// </summary>
+        [TestMethod]
+        public void champPublicLeagueExists()
+        {
+            champ1.Name = "Test1";
+            champ1.Rules_Description = "Reglas 1";
+            champ1.Beginning_Date = new DateTime(2023, 12, 25);
+            champ1.Beginning_Time = new TimeSpan(7, 0, 0);
+            champ1.Ending_Date = new DateTime(2023, 12, 31);
+            champ1.Ending_Time = new TimeSpan(23, 59, 59);
+
+            logic.championshipCreationRequest(champ1, admin.Token, admin.Salt, true);
+
+            LeagueLogic leagueLogic = new LeagueLogic();
+
+            League league = leagueLogic.getLeagueByCode(champ1.Unique_Key);
+
+            Assert.IsNotNull(league);
+            logic.championshipDeletionRequest(champ1.Unique_Key, admin.Token, admin.Salt);
+        }
+
         /// <summary>
         /// Test method designed to assert when a championship is beign made with a date before today's date
         /// </summary>
@@ -54,7 +79,7 @@ namespace TestSuite
             champ1.Beginning_Date = DateTime.Now.AddDays(-2);
             champ1.Ending_Date = DateTime.Now.AddDays(-1);
 
-            HttpResponseMessage response=logic.championshipCreationRequest(champ1, admin.Token, admin.Salt);
+            HttpResponseMessage response=logic.championshipCreationRequest(champ1, admin.Token, admin.Salt,true);
 
             Assert.AreEqual(HttpStatusCode.Conflict, response.StatusCode);
         }
@@ -67,7 +92,7 @@ namespace TestSuite
             champ1.Beginning_Date = DateTime.Now.AddDays(2);
             champ1.Ending_Date = DateTime.Now.AddDays(1);
 
-            HttpResponseMessage response=logic.championshipCreationRequest(champ1, admin.Token,admin.Salt);
+            HttpResponseMessage response=logic.championshipCreationRequest(champ1, admin.Token,admin.Salt,true);
 
             Assert.AreEqual(HttpStatusCode.Conflict, response.StatusCode);
         }
@@ -84,8 +109,8 @@ namespace TestSuite
             champ2.Beginning_Date = DateTime.Now.AddDays(2);
             champ1.Ending_Date = DateTime.Now.AddDays(2).AddMonths(2);
 
-            logic.championshipCreationRequest(champ1, admin.Token, admin.Salt);
-            HttpResponseMessage response1 = logic.championshipCreationRequest(champ2, admin.Token, admin.Salt);
+            logic.championshipCreationRequest(champ1, admin.Token, admin.Salt,true);
+            HttpResponseMessage response1 = logic.championshipCreationRequest(champ2, admin.Token, admin.Salt,true);
             logic.championshipDeletionRequest(champ1.Unique_Key, admin.Token, admin.Salt);
 
 
@@ -95,8 +120,8 @@ namespace TestSuite
             champ2.Beginning_Date = DateTime.Now.AddMonths(1);
             champ1.Ending_Date = DateTime.Now.AddMonths(2);
 
-            logic.championshipCreationRequest(champ1, admin.Token, admin.Salt);
-            HttpResponseMessage response2 = logic.championshipCreationRequest(champ2, admin.Token, admin.Salt);
+            logic.championshipCreationRequest(champ1, admin.Token, admin.Salt,true);
+            HttpResponseMessage response2 = logic.championshipCreationRequest(champ2, admin.Token, admin.Salt,true);
             logic.championshipDeletionRequest(champ1.Unique_Key, admin.Token, admin.Salt);
 
             Assert.AreEqual(HttpStatusCode.Conflict, response1.StatusCode);
@@ -115,8 +140,8 @@ namespace TestSuite
             champ2.Beginning_Date = DateTime.Now.AddDays(2);
             champ2.Ending_Date = DateTime.Now.AddMonths(2);
 
-            logic.championshipCreationRequest(champ1, admin.Token, admin.Salt);
-            HttpResponseMessage response1 = logic.championshipCreationRequest(champ2, admin.Token, admin.Salt);
+            logic.championshipCreationRequest(champ1, admin.Token, admin.Salt,true);
+            HttpResponseMessage response1 = logic.championshipCreationRequest(champ2, admin.Token, admin.Salt,true);
             logic.championshipDeletionRequest(champ1.Unique_Key, admin.Token, admin.Salt);
 
             champ2.Beginning_Date = DateTime.Now.AddDays(1).AddMonths(1);
@@ -125,8 +150,8 @@ namespace TestSuite
             champ1.Beginning_Date = DateTime.Now.AddMonths(1);
             champ1.Ending_Date = DateTime.Now.AddMonths(2);
 
-            logic.championshipCreationRequest(champ1, admin.Token, admin.Salt);
-            HttpResponseMessage response2 = logic.championshipCreationRequest(champ2, admin.Token, admin.Salt);
+            logic.championshipCreationRequest(champ1, admin.Token, admin.Salt,true);
+            HttpResponseMessage response2 = logic.championshipCreationRequest(champ2, admin.Token, admin.Salt,true);
             logic.championshipDeletionRequest(champ1.Unique_Key, admin.Token, admin.Salt);
 
             Assert.AreEqual(HttpStatusCode.Conflict, response1.StatusCode);
@@ -145,7 +170,7 @@ namespace TestSuite
             champ1.Ending_Date = new DateTime(2022, 12, 31);
             champ1.Ending_Time = new TimeSpan(6, 0, 0);
 
-            HttpResponseMessage response = logic.championshipCreationRequest(champ2, admin.Token, admin.Salt);
+            HttpResponseMessage response = logic.championshipCreationRequest(champ2, admin.Token, admin.Salt,true);
             logic.championshipDeletionRequest(champ1.Unique_Key, admin.Token, admin.Salt);
 
             Assert.AreEqual (HttpStatusCode.Conflict, response.StatusCode);

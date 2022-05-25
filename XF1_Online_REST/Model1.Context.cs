@@ -30,5 +30,9 @@ namespace XF1_Online_REST
         public virtual DbSet<Country> Countries { get; set; }
         public virtual DbSet<Race> Races { get; set; }
         public virtual DbSet<Status> Status { get; set; }
+        public virtual DbSet<League> Leagues { get; set; }
+        public virtual DbSet<Player> Players { get; set; }
+        public virtual DbSet<Score> Scores { get; set; }
+        public virtual DbSet<Verification_Request> Verification_Request { get; set; }
     }
 }
