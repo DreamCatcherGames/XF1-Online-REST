@@ -27,12 +27,14 @@ namespace XF1_Online_REST
     
         public virtual DbSet<Administrator> Administrators { get; set; }
         public virtual DbSet<Championship> Championships { get; set; }
-        public virtual DbSet<Country> Countries { get; set; }
-        public virtual DbSet<Race> Races { get; set; }
-        public virtual DbSet<Status> Status { get; set; }
         public virtual DbSet<League> Leagues { get; set; }
+        public virtual DbSet<Pilot> Pilots { get; set; }
         public virtual DbSet<Player> Players { get; set; }
+        public virtual DbSet<Race> Races { get; set; }
+        public virtual DbSet<Racing_Team> Racing_Team { get; set; }
         public virtual DbSet<Score> Scores { get; set; }
+        public virtual DbSet<Status> Status { get; set; }
+        public virtual DbSet<Team> Teams { get; set; }
         public virtual DbSet<Verification_Request> Verification_Request { get; set; }
     }
 }

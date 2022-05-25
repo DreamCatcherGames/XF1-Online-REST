@@ -14,21 +14,10 @@ namespace XF1_Online_REST
     
     public partial class Administrator
     {
-        public Administrator()
-        {
-
-        }
-        public Administrator(string username,string password,string token,string salt)
-        {
-            this.Username=username;
-            this.Encrypted_Password=password;
-            this.Token=token;  
-            this.Salt=salt;
-        }
         public string Username { get; set; }
         public string Role { get; set; }
+        public string Encrypted_Password { get; set; }
         public string Salt { get; set; }
         public string Token { get; set; }
-        public string Encrypted_Password { get; set; }
     }
 }

@@ -12,27 +12,21 @@ namespace XF1_Online_REST
     using System;
     using System.Collections.Generic;
     
-    public partial class Championship
+    public partial class Pilot
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Championship()
+        public Pilot()
         {
-            this.Races = new HashSet<Race>();
-            this.Leagues = new HashSet<League>();
+            this.Teams = new HashSet<Team>();
         }
     
-        public string Unique_Key { get; set; }
         public string Name { get; set; }
-        public bool CurrentChamp { get; set; }
-        public string Rules_Description { get; set; }
-        public System.DateTime Beginning_Date { get; set; }
-        public System.TimeSpan Beginning_Time { get; set; }
-        public System.DateTime Ending_Date { get; set; }
-        public System.TimeSpan Ending_Time { get; set; }
+        public string Racing_Team { get; set; }
+        public decimal Price { get; set; }
+        public string Photo { get; set; }
     
+        public virtual Racing_Team Racing_Team1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Race> Races { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<League> Leagues { get; set; }
+        public virtual ICollection<Team> Teams { get; set; }
     }
 }

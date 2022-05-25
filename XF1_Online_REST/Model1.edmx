@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="XF1OnlineModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="XF1OnlineModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Administrator">
           <Key>
             <PropertyRef Name="Username" />
@@ -28,12 +28,6 @@
           <Property Name="Ending_Date" Type="date" Nullable="false" />
           <Property Name="Ending_Time" Type="time" Precision="7" Nullable="false" />
         </EntityType>
-        <EntityType Name="Country">
-          <Key>
-            <PropertyRef Name="Name" />
-          </Key>
-          <Property Name="Name" Type="varchar" MaxLength="30" Nullable="false" />
-        </EntityType>
         <EntityType Name="League">
           <Key>
             <PropertyRef Name="Unique_Key" />
@@ -42,6 +36,15 @@
           <Property Name="Champ_Key" Type="varchar" MaxLength="6" Nullable="false" />
           <Property Name="Name" Type="varchar" MaxLength="30" Nullable="false" />
           <Property Name="Type" Type="varchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Pilot">
+          <Key>
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="Name" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="Racing_Team" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="Price" Type="numeric" Precision="6" Scale="2" Nullable="false" />
+          <Property Name="Photo" Type="varchar" MaxLength="200" Nullable="false" />
         </EntityType>
         <EntityType Name="Player">
           <Key>
@@ -76,6 +79,15 @@
           <Property Name="Ending_Date" Type="date" Nullable="false" />
           <Property Name="Ending_Time" Type="time" Precision="7" Nullable="false" />
         </EntityType>
+        <EntityType Name="Racing_Team">
+          <Key>
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="Name" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="Country" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="Price" Type="numeric" Precision="6" Scale="2" Nullable="false" />
+          <Property Name="Photo" Type="varchar" MaxLength="200" Nullable="false" />
+        </EntityType>
         <EntityType Name="Score">
           <Key>
             <PropertyRef Name="League_Key" />
@@ -90,6 +102,25 @@
             <PropertyRef Name="Type" />
           </Key>
           <Property Name="Type" Type="varchar" MaxLength="30" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Team">
+          <Key>
+            <PropertyRef Name="Name" />
+            <PropertyRef Name="Username" />
+          </Key>
+          <Property Name="Name" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="Username" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="Racing_Team_Name" Type="varchar" MaxLength="30" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Team_Pilot">
+          <Key>
+            <PropertyRef Name="Team_Name" />
+            <PropertyRef Name="Username" />
+            <PropertyRef Name="Pilot_Name" />
+          </Key>
+          <Property Name="Team_Name" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="Username" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="Pilot_Name" Type="varchar" MaxLength="30" Nullable="false" />
         </EntityType>
         <EntityType Name="Verification_Request">
           <Key>
@@ -126,34 +157,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Country">
-          <End Role="Country" Type="Self.Country" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="Race" Type="Self.Race" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Country">
-              <PropertyRef Name="Name" />
-            </Principal>
-            <Dependent Role="Race">
-              <PropertyRef Name="Country" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Country_Player">
-          <End Role="Country" Type="Self.Country" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="Player" Type="Self.Player" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Country">
-              <PropertyRef Name="Name" />
-            </Principal>
-            <Dependent Role="Player">
-              <PropertyRef Name="Country" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_LeagueKey">
           <End Role="League" Type="Self.League" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -168,6 +171,32 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Pilot_Name_Team_Pilot">
+          <End Role="Pilot" Type="Self.Pilot" Multiplicity="1" />
+          <End Role="Team_Pilot" Type="Self.Team_Pilot" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Pilot">
+              <PropertyRef Name="Name" />
+            </Principal>
+            <Dependent Role="Team_Pilot">
+              <PropertyRef Name="Pilot_Name" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Pilot_Racing_Team">
+          <End Role="Racing_Team" Type="Self.Racing_Team" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Pilot" Type="Self.Pilot" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Racing_Team">
+              <PropertyRef Name="Name" />
+            </Principal>
+            <Dependent Role="Pilot">
+              <PropertyRef Name="Racing_Team" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Status">
           <End Role="Status" Type="Self.Status" Multiplicity="1" />
           <End Role="Race" Type="Self.Race" Multiplicity="*" />
@@ -177,6 +206,50 @@
             </Principal>
             <Dependent Role="Race">
               <PropertyRef Name="Status" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Team_Name_Team_Pilot">
+          <End Role="Team" Type="Self.Team" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Team_Pilot" Type="Self.Team_Pilot" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Team">
+              <PropertyRef Name="Name" />
+              <PropertyRef Name="Username" />
+            </Principal>
+            <Dependent Role="Team_Pilot">
+              <PropertyRef Name="Team_Name" />
+              <PropertyRef Name="Username" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Team_Racing_Team">
+          <End Role="Racing_Team" Type="Self.Racing_Team" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Team" Type="Self.Team" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Racing_Team">
+              <PropertyRef Name="Name" />
+            </Principal>
+            <Dependent Role="Team">
+              <PropertyRef Name="Racing_Team_Name" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Team_Username">
+          <End Role="Player" Type="Self.Player" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Team" Type="Self.Team" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Player">
+              <PropertyRef Name="Username" />
+            </Principal>
+            <Dependent Role="Team">
+              <PropertyRef Name="Username" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -211,12 +284,15 @@
         <EntityContainer Name="XF1OnlineModelStoreContainer">
           <EntitySet Name="Administrator" EntityType="Self.Administrator" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Championship" EntityType="Self.Championship" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Country" EntityType="Self.Country" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="League" EntityType="Self.League" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Pilot" EntityType="Self.Pilot" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Player" EntityType="Self.Player" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Race" EntityType="Self.Race" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Racing_Team" EntityType="Self.Racing_Team" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Score" EntityType="Self.Score" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Status" EntityType="Self.Status" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Team" EntityType="Self.Team" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Team_Pilot" EntityType="Self.Team_Pilot" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Verification_Request" EntityType="Self.Verification_Request" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_ChampKey" Association="Self.FK_ChampKey">
             <End Role="Championship" EntitySet="Championship" />
@@ -226,21 +302,33 @@
             <End Role="Championship" EntitySet="Championship" />
             <End Role="League" EntitySet="League" />
           </AssociationSet>
-          <AssociationSet Name="FK_Country" Association="Self.FK_Country">
-            <End Role="Country" EntitySet="Country" />
-            <End Role="Race" EntitySet="Race" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Country_Player" Association="Self.FK_Country_Player">
-            <End Role="Country" EntitySet="Country" />
-            <End Role="Player" EntitySet="Player" />
-          </AssociationSet>
           <AssociationSet Name="FK_LeagueKey" Association="Self.FK_LeagueKey">
             <End Role="League" EntitySet="League" />
             <End Role="Score" EntitySet="Score" />
           </AssociationSet>
+          <AssociationSet Name="FK_Pilot_Name_Team_Pilot" Association="Self.FK_Pilot_Name_Team_Pilot">
+            <End Role="Pilot" EntitySet="Pilot" />
+            <End Role="Team_Pilot" EntitySet="Team_Pilot" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Pilot_Racing_Team" Association="Self.FK_Pilot_Racing_Team">
+            <End Role="Racing_Team" EntitySet="Racing_Team" />
+            <End Role="Pilot" EntitySet="Pilot" />
+          </AssociationSet>
           <AssociationSet Name="FK_Status" Association="Self.FK_Status">
             <End Role="Status" EntitySet="Status" />
             <End Role="Race" EntitySet="Race" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Team_Name_Team_Pilot" Association="Self.FK_Team_Name_Team_Pilot">
+            <End Role="Team" EntitySet="Team" />
+            <End Role="Team_Pilot" EntitySet="Team_Pilot" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Team_Racing_Team" Association="Self.FK_Team_Racing_Team">
+            <End Role="Racing_Team" EntitySet="Racing_Team" />
+            <End Role="Team" EntitySet="Team" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Team_Username" Association="Self.FK_Team_Username">
+            <End Role="Player" EntitySet="Player" />
+            <End Role="Team" EntitySet="Team" />
           </AssociationSet>
           <AssociationSet Name="FK_Username" Association="Self.FK_Username">
             <End Role="Player" EntitySet="Player" />
@@ -251,7 +339,8 @@
             <End Role="Verification_Request" EntitySet="Verification_Request" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="XF1OnlineModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -261,9 +350,9 @@
           </Key>
           <Property Name="Username" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Role" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Encrypted_Password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Salt" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
           <Property Name="Token" Type="String" MaxLength="32" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Encrypted_Password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Championship">
           <Key>
@@ -271,21 +360,54 @@
           </Key>
           <Property Name="Unique_Key" Type="String" MaxLength="6" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CurrentChamp" Type="Boolean" Nullable="false" />
           <Property Name="Rules_Description" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
           <Property Name="Beginning_Date" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="Beginning_Time" Type="Time" Nullable="false" Precision="7" />
           <Property Name="Ending_Date" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="Ending_Time" Type="Time" Nullable="false" Precision="7" />
-          <Property Name="CurrentChamp" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Leagues" Relationship="XF1OnlineModel.FK_ChampKey_League" FromRole="Championship" ToRole="League" />
+          <NavigationProperty Name="Races" Relationship="Self.FK_ChampKey" FromRole="Championship" ToRole="Race" />
+          <NavigationProperty Name="Leagues" Relationship="Self.FK_ChampKey_League" FromRole="Championship" ToRole="League" />
         </EntityType>
-        <EntityType Name="Country">
+        <EntityType Name="League">
+          <Key>
+            <PropertyRef Name="Unique_Key" />
+          </Key>
+          <Property Name="Unique_Key" Type="String" MaxLength="6" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Champ_Key" Type="String" MaxLength="6" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Type" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Championship" Relationship="Self.FK_ChampKey_League" FromRole="League" ToRole="Championship" />
+          <NavigationProperty Name="Scores" Relationship="Self.FK_LeagueKey" FromRole="League" ToRole="Score" />
+        </EntityType>
+        <EntityType Name="Pilot">
           <Key>
             <PropertyRef Name="Name" />
           </Key>
           <Property Name="Name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Races" Relationship="Self.FK_Country" FromRole="Country" ToRole="Race" />
-          <NavigationProperty Name="Players" Relationship="XF1OnlineModel.FK_Country_Player" FromRole="Country" ToRole="Player" />
+          <Property Name="Racing_Team" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Price" Type="Decimal" Precision="6" Scale="2" Nullable="false" />
+          <Property Name="Photo" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Racing_Team1" Relationship="Self.FK_Pilot_Racing_Team" FromRole="Pilot" ToRole="Racing_Team" />
+          <NavigationProperty Name="Teams" Relationship="Self.Team_Pilot" FromRole="Pilot" ToRole="Team" />
+        </EntityType>
+        <EntityType Name="Player">
+          <Key>
+            <PropertyRef Name="Username" />
+          </Key>
+          <Property Name="Username" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <Property Name="Country" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="First_Name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Last_Name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Money" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="Encrypted_Password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Salt" Type="String" MaxLength="32" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Token" Type="String" MaxLength="32" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Teams" Relationship="Self.FK_Team_Username" FromRole="Player" ToRole="Team" />
+          <NavigationProperty Name="Scores" Relationship="Self.FK_Username" FromRole="Player" ToRole="Score" />
+          <NavigationProperty Name="Verification_Request" Relationship="Self.FK_Verification_Username" FromRole="Player" ToRole="Verification_Request" />
         </EntityType>
         <EntityType Name="Race">
           <Key>
@@ -304,12 +426,57 @@
           <Property Name="Beginning_Time" Type="Time" Nullable="false" Precision="7" />
           <Property Name="Ending_Date" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="Ending_Time" Type="Time" Nullable="false" Precision="7" />
+          <NavigationProperty Name="Championship" Relationship="Self.FK_ChampKey" FromRole="Race" ToRole="Championship" />
+          <NavigationProperty Name="Status1" Relationship="Self.FK_Status" FromRole="Race" ToRole="Status" />
+        </EntityType>
+        <EntityType Name="Racing_Team">
+          <Key>
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="Name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Country" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Price" Type="Decimal" Precision="6" Scale="2" Nullable="false" />
+          <Property Name="Photo" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Pilots" Relationship="Self.FK_Pilot_Racing_Team" FromRole="Racing_Team" ToRole="Pilot" />
+          <NavigationProperty Name="Teams" Relationship="Self.FK_Team_Racing_Team" FromRole="Racing_Team" ToRole="Team" />
+        </EntityType>
+        <EntityType Name="Score">
+          <Key>
+            <PropertyRef Name="League_Key" />
+            <PropertyRef Name="Username" />
+          </Key>
+          <Property Name="League_Key" Type="String" MaxLength="6" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Username" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Points" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="League" Relationship="Self.FK_LeagueKey" FromRole="Score" ToRole="League" />
+          <NavigationProperty Name="Player" Relationship="Self.FK_Username" FromRole="Score" ToRole="Player" />
         </EntityType>
         <EntityType Name="Status">
           <Key>
             <PropertyRef Name="Type" />
           </Key>
           <Property Name="Type" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Races" Relationship="Self.FK_Status" FromRole="Status" ToRole="Race" />
+        </EntityType>
+        <EntityType Name="Team">
+          <Key>
+            <PropertyRef Name="Name" />
+            <PropertyRef Name="Username" />
+          </Key>
+          <Property Name="Name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Username" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Racing_Team_Name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Player" Relationship="Self.FK_Team_Username" FromRole="Team" ToRole="Player" />
+          <NavigationProperty Name="Racing_Team" Relationship="Self.FK_Team_Racing_Team" FromRole="Team" ToRole="Racing_Team" />
+          <NavigationProperty Name="Pilots" Relationship="Self.Team_Pilot" FromRole="Team" ToRole="Pilot" />
+        </EntityType>
+        <EntityType Name="Verification_Request">
+          <Key>
+            <PropertyRef Name="Token" />
+          </Key>
+          <Property Name="Token" Type="String" MaxLength="32" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Username" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Player" Relationship="Self.FK_Verification_Username" FromRole="Verification_Request" ToRole="Player" />
         </EntityType>
         <Association Name="FK_ChampKey">
           <End Role="Championship" Type="Self.Championship" Multiplicity="1">
@@ -325,17 +492,87 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Country">
-          <End Role="Country" Type="Self.Country" Multiplicity="1">
+        <Association Name="FK_ChampKey_League">
+          <End Role="Championship" Type="Self.Championship" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="Race" Type="Self.Race" Multiplicity="*" />
+          <End Role="League" Type="Self.League" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Country">
+            <Principal Role="Championship">
+              <PropertyRef Name="Unique_Key" />
+            </Principal>
+            <Dependent Role="League">
+              <PropertyRef Name="Champ_Key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LeagueKey">
+          <End Role="League" Type="Self.League" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Score" Type="Self.Score" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="League">
+              <PropertyRef Name="Unique_Key" />
+            </Principal>
+            <Dependent Role="Score">
+              <PropertyRef Name="League_Key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Pilot_Racing_Team">
+          <End Role="Racing_Team" Type="Self.Racing_Team" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Pilot" Type="Self.Pilot" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Racing_Team">
               <PropertyRef Name="Name" />
             </Principal>
-            <Dependent Role="Race">
-              <PropertyRef Name="Country" />
+            <Dependent Role="Pilot">
+              <PropertyRef Name="Racing_Team" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Team_Username">
+          <End Role="Player" Type="Self.Player" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Team" Type="Self.Team" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Player">
+              <PropertyRef Name="Username" />
+            </Principal>
+            <Dependent Role="Team">
+              <PropertyRef Name="Username" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Username">
+          <End Role="Player" Type="Self.Player" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Score" Type="Self.Score" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Player">
+              <PropertyRef Name="Username" />
+            </Principal>
+            <Dependent Role="Score">
+              <PropertyRef Name="Username" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Verification_Username">
+          <End Role="Player" Type="Self.Player" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Verification_Request" Type="Self.Verification_Request" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Player">
+              <PropertyRef Name="Username" />
+            </Principal>
+            <Dependent Role="Verification_Request">
+              <PropertyRef Name="Username" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -351,165 +588,77 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Team_Racing_Team">
+          <End Role="Racing_Team" Type="Self.Racing_Team" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Team" Type="Self.Team" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Racing_Team">
+              <PropertyRef Name="Name" />
+            </Principal>
+            <Dependent Role="Team">
+              <PropertyRef Name="Racing_Team_Name" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Team_Pilot">
+          <End Role="Pilot" Type="Self.Pilot" Multiplicity="*" />
+          <End Role="Team" Type="Self.Team" Multiplicity="*" />
+        </Association>
         <EntityContainer Name="XF1OnlineEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Administrators" EntityType="Self.Administrator" />
           <EntitySet Name="Championships" EntityType="Self.Championship" />
-          <EntitySet Name="Countries" EntityType="Self.Country" />
+          <EntitySet Name="Leagues" EntityType="Self.League" />
+          <EntitySet Name="Pilots" EntityType="Self.Pilot" />
+          <EntitySet Name="Players" EntityType="Self.Player" />
           <EntitySet Name="Races" EntityType="Self.Race" />
+          <EntitySet Name="Racing_Team" EntityType="Self.Racing_Team" />
+          <EntitySet Name="Scores" EntityType="Self.Score" />
           <EntitySet Name="Status" EntityType="Self.Status" />
+          <EntitySet Name="Teams" EntityType="Self.Team" />
+          <EntitySet Name="Verification_Request" EntityType="Self.Verification_Request" />
           <AssociationSet Name="FK_ChampKey" Association="Self.FK_ChampKey">
             <End Role="Championship" EntitySet="Championships" />
             <End Role="Race" EntitySet="Races" />
           </AssociationSet>
-          <AssociationSet Name="FK_Country" Association="Self.FK_Country">
-            <End Role="Country" EntitySet="Countries" />
-            <End Role="Race" EntitySet="Races" />
+          <AssociationSet Name="FK_ChampKey_League" Association="Self.FK_ChampKey_League">
+            <End Role="Championship" EntitySet="Championships" />
+            <End Role="League" EntitySet="Leagues" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LeagueKey" Association="Self.FK_LeagueKey">
+            <End Role="League" EntitySet="Leagues" />
+            <End Role="Score" EntitySet="Scores" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Pilot_Racing_Team" Association="Self.FK_Pilot_Racing_Team">
+            <End Role="Racing_Team" EntitySet="Racing_Team" />
+            <End Role="Pilot" EntitySet="Pilots" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Team_Username" Association="Self.FK_Team_Username">
+            <End Role="Player" EntitySet="Players" />
+            <End Role="Team" EntitySet="Teams" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Username" Association="Self.FK_Username">
+            <End Role="Player" EntitySet="Players" />
+            <End Role="Score" EntitySet="Scores" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Verification_Username" Association="Self.FK_Verification_Username">
+            <End Role="Player" EntitySet="Players" />
+            <End Role="Verification_Request" EntitySet="Verification_Request" />
           </AssociationSet>
           <AssociationSet Name="FK_Status" Association="Self.FK_Status">
             <End Role="Status" EntitySet="Status" />
             <End Role="Race" EntitySet="Races" />
           </AssociationSet>
-          <EntitySet Name="Leagues" EntityType="XF1OnlineModel.League" />
-          <EntitySet Name="Players" EntityType="XF1OnlineModel.Player" />
-          <EntitySet Name="Scores" EntityType="XF1OnlineModel.Score" />
-          <AssociationSet Name="FK_ChampKey_League" Association="XF1OnlineModel.FK_ChampKey_League">
-            <End Role="Championship" EntitySet="Championships" />
-            <End Role="League" EntitySet="Leagues" />
+          <AssociationSet Name="FK_Team_Racing_Team" Association="Self.FK_Team_Racing_Team">
+            <End Role="Racing_Team" EntitySet="Racing_Team" />
+            <End Role="Team" EntitySet="Teams" />
           </AssociationSet>
-          <AssociationSet Name="FK_Country_Player" Association="XF1OnlineModel.FK_Country_Player">
-            <End Role="Country" EntitySet="Countries" />
-            <End Role="Player" EntitySet="Players" />
-          </AssociationSet>
-          <AssociationSet Name="FK_LeagueKey" Association="XF1OnlineModel.FK_LeagueKey">
-            <End Role="League" EntitySet="Leagues" />
-            <End Role="Score" EntitySet="Scores" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Username" Association="XF1OnlineModel.FK_Username">
-            <End Role="Player" EntitySet="Players" />
-            <End Role="Score" EntitySet="Scores" />
-          </AssociationSet>
-          <EntitySet Name="Verification_Request" EntityType="XF1OnlineModel.Verification_Request" />
-          <AssociationSet Name="FK_Verification_Username" Association="XF1OnlineModel.FK_Verification_Username">
-            <End Role="Player" EntitySet="Players" />
-            <End Role="Verification_Request" EntitySet="Verification_Request" />
+          <AssociationSet Name="Team_Pilot" Association="Self.Team_Pilot">
+            <End Role="Pilot" EntitySet="Pilots" />
+            <End Role="Team" EntitySet="Teams" />
           </AssociationSet>
         </EntityContainer>
-        <EntityType Name="League">
-          <Key>
-            <PropertyRef Name="Unique_Key" />
-          </Key>
-          <Property Name="Unique_Key" Type="String" Nullable="false" MaxLength="6" FixedLength="false" Unicode="false" />
-          <Property Name="Champ_Key" Type="String" Nullable="false" MaxLength="6" FixedLength="false" Unicode="false" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
-          <Property Name="Type" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Championship" Relationship="XF1OnlineModel.FK_ChampKey_League" FromRole="League" ToRole="Championship" />
-          <NavigationProperty Name="Scores" Relationship="XF1OnlineModel.FK_LeagueKey" FromRole="League" ToRole="Score" />
-        </EntityType>
-        <EntityType Name="Player">
-          <Key>
-            <PropertyRef Name="Username" />
-          </Key>
-          <Property Name="Username" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
-          <Property Name="Country" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
-          <Property Name="First_Name" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
-          <Property Name="Last_Name" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
-          <Property Name="Email" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
-          <Property Name="Money" Type="Decimal" Nullable="false" Precision="10" Scale="2" />
-          <Property Name="Encrypted_Password" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Salt" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="false" />
-          <Property Name="Token" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="false" />
-          <Property Name="Active" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Verification_Request" Relationship="XF1OnlineModel.FK_Verification_Username" FromRole="Player" ToRole="Verification_Request" />
-        </EntityType>
-        <EntityType Name="Score">
-          <Key>
-            <PropertyRef Name="League_Key" />
-            <PropertyRef Name="Username" />
-          </Key>
-          <Property Name="League_Key" Type="String" Nullable="false" MaxLength="6" FixedLength="false" Unicode="false" />
-          <Property Name="Username" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
-          <Property Name="Points" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="League" Relationship="XF1OnlineModel.FK_LeagueKey" FromRole="Score" ToRole="League" />
-          <NavigationProperty Name="Player" Relationship="XF1OnlineModel.FK_Username" FromRole="Score" ToRole="Player" />
-        </EntityType>
-        <Association Name="FK_ChampKey_League">
-          <End Type="XF1OnlineModel.Championship" Role="Championship" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="XF1OnlineModel.League" Role="League" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Championship">
-              <PropertyRef Name="Unique_Key" />
-            </Principal>
-            <Dependent Role="League">
-              <PropertyRef Name="Champ_Key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Country_Player">
-          <End Type="XF1OnlineModel.Country" Role="Country" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="XF1OnlineModel.Player" Role="Player" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Country">
-              <PropertyRef Name="Name" />
-            </Principal>
-            <Dependent Role="Player">
-              <PropertyRef Name="Country" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_LeagueKey">
-          <End Type="XF1OnlineModel.League" Role="League" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="XF1OnlineModel.Score" Role="Score" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="League">
-              <PropertyRef Name="Unique_Key" />
-            </Principal>
-            <Dependent Role="Score">
-              <PropertyRef Name="League_Key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Username">
-          <End Type="XF1OnlineModel.Player" Role="Player" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="XF1OnlineModel.Score" Role="Score" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Player">
-              <PropertyRef Name="Username" />
-            </Principal>
-            <Dependent Role="Score">
-              <PropertyRef Name="Username" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="Verification_Request">
-          <Key>
-            <PropertyRef Name="Token" />
-          </Key>
-          <Property Name="Token" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="false" />
-          <Property Name="Username" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Player" Relationship="XF1OnlineModel.FK_Verification_Username" FromRole="Verification_Request" ToRole="Player" />
-        </EntityType>
-        <Association Name="FK_Verification_Username">
-          <End Type="XF1OnlineModel.Player" Role="Player" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="XF1OnlineModel.Verification_Request" Role="Verification_Request" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Player">
-              <PropertyRef Name="Username" />
-            </Principal>
-            <Dependent Role="Verification_Request">
-              <PropertyRef Name="Username" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -519,9 +668,9 @@
           <EntitySetMapping Name="Administrators">
             <EntityTypeMapping TypeName="XF1OnlineModel.Administrator">
               <MappingFragment StoreEntitySet="Administrator">
-                <ScalarProperty Name="Encrypted_Password" ColumnName="Encrypted_Password" />
                 <ScalarProperty Name="Username" ColumnName="Username" />
                 <ScalarProperty Name="Role" ColumnName="Role" />
+                <ScalarProperty Name="Encrypted_Password" ColumnName="Encrypted_Password" />
                 <ScalarProperty Name="Salt" ColumnName="Salt" />
                 <ScalarProperty Name="Token" ColumnName="Token" />
               </MappingFragment>
@@ -530,9 +679,9 @@
           <EntitySetMapping Name="Championships">
             <EntityTypeMapping TypeName="XF1OnlineModel.Championship">
               <MappingFragment StoreEntitySet="Championship">
-                <ScalarProperty Name="CurrentChamp" ColumnName="CurrentChamp" />
                 <ScalarProperty Name="Unique_Key" ColumnName="Unique_Key" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="CurrentChamp" ColumnName="CurrentChamp" />
                 <ScalarProperty Name="Rules_Description" ColumnName="Rules_Description" />
                 <ScalarProperty Name="Beginning_Date" ColumnName="Beginning_Date" />
                 <ScalarProperty Name="Beginning_Time" ColumnName="Beginning_Time" />
@@ -541,10 +690,39 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Countries">
-            <EntityTypeMapping TypeName="XF1OnlineModel.Country">
-              <MappingFragment StoreEntitySet="Country">
+          <EntitySetMapping Name="Leagues">
+            <EntityTypeMapping TypeName="XF1OnlineModel.League">
+              <MappingFragment StoreEntitySet="League">
+                <ScalarProperty Name="Unique_Key" ColumnName="Unique_Key" />
+                <ScalarProperty Name="Champ_Key" ColumnName="Champ_Key" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Pilots">
+            <EntityTypeMapping TypeName="XF1OnlineModel.Pilot">
+              <MappingFragment StoreEntitySet="Pilot">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Racing_Team" ColumnName="Racing_Team" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Photo" ColumnName="Photo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Players">
+            <EntityTypeMapping TypeName="XF1OnlineModel.Player">
+              <MappingFragment StoreEntitySet="Player">
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="First_Name" ColumnName="First_Name" />
+                <ScalarProperty Name="Last_Name" ColumnName="Last_Name" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Money" ColumnName="Money" />
+                <ScalarProperty Name="Encrypted_Password" ColumnName="Encrypted_Password" />
+                <ScalarProperty Name="Salt" ColumnName="Salt" />
+                <ScalarProperty Name="Token" ColumnName="Token" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -565,6 +743,25 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Racing_Team">
+            <EntityTypeMapping TypeName="XF1OnlineModel.Racing_Team">
+              <MappingFragment StoreEntitySet="Racing_Team">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Photo" ColumnName="Photo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Scores">
+            <EntityTypeMapping TypeName="XF1OnlineModel.Score">
+              <MappingFragment StoreEntitySet="Score">
+                <ScalarProperty Name="League_Key" ColumnName="League_Key" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Points" ColumnName="Points" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Status">
             <EntityTypeMapping TypeName="XF1OnlineModel.Status">
               <MappingFragment StoreEntitySet="Status">
@@ -572,49 +769,32 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Leagues">
-            <EntityTypeMapping TypeName="XF1OnlineModel.League">
-              <MappingFragment StoreEntitySet="League">
-                <ScalarProperty Name="Type" ColumnName="Type" />
+          <EntitySetMapping Name="Teams">
+            <EntityTypeMapping TypeName="XF1OnlineModel.Team">
+              <MappingFragment StoreEntitySet="Team">
                 <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Champ_Key" ColumnName="Champ_Key" />
-                <ScalarProperty Name="Unique_Key" ColumnName="Unique_Key" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Players">
-            <EntityTypeMapping TypeName="XF1OnlineModel.Player">
-              <MappingFragment StoreEntitySet="Player">
-                <ScalarProperty Name="Active" ColumnName="Active" />
-                <ScalarProperty Name="Token" ColumnName="Token" />
-                <ScalarProperty Name="Salt" ColumnName="Salt" />
-                <ScalarProperty Name="Encrypted_Password" ColumnName="Encrypted_Password" />
-                <ScalarProperty Name="Money" ColumnName="Money" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="Last_Name" ColumnName="Last_Name" />
-                <ScalarProperty Name="First_Name" ColumnName="First_Name" />
-                <ScalarProperty Name="Country" ColumnName="Country" />
                 <ScalarProperty Name="Username" ColumnName="Username" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Scores">
-            <EntityTypeMapping TypeName="XF1OnlineModel.Score">
-              <MappingFragment StoreEntitySet="Score">
-                <ScalarProperty Name="Points" ColumnName="Points" />
-                <ScalarProperty Name="Username" ColumnName="Username" />
-                <ScalarProperty Name="League_Key" ColumnName="League_Key" />
+                <ScalarProperty Name="Racing_Team_Name" ColumnName="Racing_Team_Name" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Verification_Request">
             <EntityTypeMapping TypeName="XF1OnlineModel.Verification_Request">
               <MappingFragment StoreEntitySet="Verification_Request">
-                <ScalarProperty Name="Username" ColumnName="Username" />
                 <ScalarProperty Name="Token" ColumnName="Token" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <AssociationSetMapping Name="Team_Pilot" TypeName="XF1OnlineModel.Team_Pilot" StoreEntitySet="Team_Pilot">
+            <EndProperty Name="Pilot">
+              <ScalarProperty Name="Name" ColumnName="Pilot_Name" />
+            </EndProperty>
+            <EndProperty Name="Team">
+              <ScalarProperty Name="Name" ColumnName="Team_Name" />
+              <ScalarProperty Name="Username" ColumnName="Username" />
+            </EndProperty>
+          </AssociationSetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
