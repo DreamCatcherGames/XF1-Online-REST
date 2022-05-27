@@ -12,6 +12,8 @@ namespace XF1_Online_REST
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class XF1OnlineEntities : DbContext
     {
@@ -27,12 +29,74 @@ namespace XF1_Online_REST
     
         public virtual DbSet<Administrator> Administrators { get; set; }
         public virtual DbSet<Championship> Championships { get; set; }
-        public virtual DbSet<Country> Countries { get; set; }
-        public virtual DbSet<Race> Races { get; set; }
-        public virtual DbSet<Status> Status { get; set; }
         public virtual DbSet<League> Leagues { get; set; }
+        public virtual DbSet<Pilot> Pilots { get; set; }
         public virtual DbSet<Player> Players { get; set; }
+        public virtual DbSet<Race> Races { get; set; }
+        public virtual DbSet<Racing_Team> Racing_Team { get; set; }
         public virtual DbSet<Score> Scores { get; set; }
+        public virtual DbSet<Status> Status { get; set; }
+        public virtual DbSet<Team> Teams { get; set; }
         public virtual DbSet<Verification_Request> Verification_Request { get; set; }
+    
+        public virtual ObjectResult<SP_filterPilots_Result> SP_filterPilots(string name, string racing_Team)
+        {
+            var nameParameter = name != null ?
+                new ObjectParameter("Name", name) :
+                new ObjectParameter("Name", typeof(string));
+    
+            var racing_TeamParameter = racing_Team != null ?
+                new ObjectParameter("Racing_Team", racing_Team) :
+                new ObjectParameter("Racing_Team", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_filterPilots_Result>("SP_filterPilots", nameParameter, racing_TeamParameter);
+        }
+    
+        public virtual ObjectResult<SP_filterRacingTeams_Result> SP_filterRacingTeams(string name, string country)
+        {
+            var nameParameter = name != null ?
+                new ObjectParameter("Name", name) :
+                new ObjectParameter("Name", typeof(string));
+    
+            var countryParameter = country != null ?
+                new ObjectParameter("Country", country) :
+                new ObjectParameter("Country", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_filterRacingTeams_Result>("SP_filterRacingTeams", nameParameter, countryParameter);
+        }
+    
+        public virtual int SP_AddPilotsPlayer(string team_Name, string username, string pilot_Name)
+        {
+            var team_NameParameter = team_Name != null ?
+                new ObjectParameter("Team_Name", team_Name) :
+                new ObjectParameter("Team_Name", typeof(string));
+    
+            var usernameParameter = username != null ?
+                new ObjectParameter("Username", username) :
+                new ObjectParameter("Username", typeof(string));
+    
+            var pilot_NameParameter = pilot_Name != null ?
+                new ObjectParameter("Pilot_Name", pilot_Name) :
+                new ObjectParameter("Pilot_Name", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_AddPilotsPlayer", team_NameParameter, usernameParameter, pilot_NameParameter);
+        }
+    
+        public virtual int SP_AddRacing_TeamPlayer(string team_Name, string username, string racing_Team_Name)
+        {
+            var team_NameParameter = team_Name != null ?
+                new ObjectParameter("Team_Name", team_Name) :
+                new ObjectParameter("Team_Name", typeof(string));
+    
+            var usernameParameter = username != null ?
+                new ObjectParameter("Username", username) :
+                new ObjectParameter("Username", typeof(string));
+    
+            var racing_Team_NameParameter = racing_Team_Name != null ?
+                new ObjectParameter("Racing_Team_Name", racing_Team_Name) :
+                new ObjectParameter("Racing_Team_Name", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_AddRacing_TeamPlayer", team_NameParameter, usernameParameter, racing_Team_NameParameter);
+        }
     }
 }

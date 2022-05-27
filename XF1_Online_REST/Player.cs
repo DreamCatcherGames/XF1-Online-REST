@@ -17,10 +17,11 @@ namespace XF1_Online_REST
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Player()
         {
-            this.Verification_Request = new HashSet<Verification_Request>();
+            this.Teams = new HashSet<Team>();
         }
     
         public string Username { get; set; }
+        public bool Active { get; set; }
         public string Country { get; set; }
         public string First_Name { get; set; }
         public string Last_Name { get; set; }
@@ -29,9 +30,8 @@ namespace XF1_Online_REST
         public string Encrypted_Password { get; set; }
         public string Salt { get; set; }
         public string Token { get; set; }
-        public bool Active { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Verification_Request> Verification_Request { get; set; }
+        public virtual ICollection<Team> Teams { get; set; }
     }
 }

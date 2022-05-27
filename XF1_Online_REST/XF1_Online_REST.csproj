@@ -174,13 +174,13 @@
     <Compile Include="Championship.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Controllers\LeagueController.cs" />
+    <Compile Include="Controllers\PilotController.cs" />
     <Compile Include="Controllers\PlayerController.cs" />
     <Compile Include="Controllers\RaceController.cs" />
     <Compile Include="Controllers\ChampionshipController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
-    <Compile Include="Country.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
+    <Compile Include="Controllers\Racing_TeamController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -189,10 +189,12 @@
     </Compile>
     <Compile Include="LogicScripts\Error_List.cs" />
     <Compile Include="LogicScripts\LeagueLogic.cs" />
+    <Compile Include="LogicScripts\PilotLogic.cs" />
     <Compile Include="LogicScripts\PlayerLogic.cs" />
     <Compile Include="LogicScripts\RaceLogic.cs" />
     <Compile Include="LogicScripts\ChampionshipLogic.cs" />
     <Compile Include="LogicScripts\AdminLogic.cs" />
+    <Compile Include="LogicScripts\Racing_TeamLogic.cs" />
     <Compile Include="LogicScripts\Tools.cs" />
     <Compile Include="Model1.Context.cs">
       <AutoGen>True</AutoGen>
@@ -209,6 +211,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Model1.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Pilot.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Player.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -216,10 +221,22 @@
     <Compile Include="Race.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Racing_Team.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Score.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="SP_filterPilots_Result.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_filterRacingTeams_Result.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Status.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Team.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Verification_Request.cs">
@@ -237,8 +254,8 @@
     <Content Include="Global.asax" />
     <Content Include="Model1.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Model1.Context.cs</LastGenOutput>
       <DependentUpon>Model1.edmx</DependentUpon>
+      <LastGenOutput>Model1.Context.cs</LastGenOutput>
     </Content>
     <Content Include="Model1.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

@@ -36,16 +36,23 @@ namespace XF1_Online_REST.Controllers
             return logic.registerRequest(player);
         }
 
-        // POST: api/Player
-        public void Post([FromBody]string value)
+
+        [Route("api/Player/verificationRequest")]
+        public HttpResponseMessage verificationRequest([FromBody] Verification_Request request)
         {
+            return logic.verificationRequest(request);
         }
 
-        // PUT: api/Player/5
-        public void Put(int id, [FromBody]string value)
+        [Route("api/Player/getProfile/{token}/{salt}")]
+        public HttpResponseMessage getProfile(string token,string salt)
         {
+            return logic.getProfile(token,salt);
         }
-
+        [Route("api/Player/updateProfile/{token}/{salt}")]
+        public HttpResponseMessage Put(string token,string salt, [FromBody]Player player)
+        {
+            return logic.updateProfile(token, salt, player);
+        }
         // DELETE: api/Player/5
         public void Delete(int id)
         {

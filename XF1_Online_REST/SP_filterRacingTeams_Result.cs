@@ -10,12 +10,12 @@
 namespace XF1_Online_REST
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class Score
+    public partial class SP_filterRacingTeams_Result
     {
-        public string League_Key { get; set; }
-        public string Username { get; set; }
-        public int Points { get; set; }
+        public string Name { get; set; }
+        public string Country { get; set; }
+        public decimal Price { get; set; }
+        public string Photo { get; set; }
     }
 }

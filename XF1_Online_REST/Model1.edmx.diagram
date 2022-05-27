@@ -4,25 +4,28 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="a76e64a547ec4f90ace25f19f8aad9af" Name="Diagram1" ZoomLevel="87">
-        <EntityTypeShape EntityType="XF1OnlineModel.Administrator" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="XF1OnlineModel.Championship" Width="1.5" PointX="0.75" PointY="1.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="XF1OnlineModel.Country" Width="1.5" PointX="0.75" PointY="5.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="XF1OnlineModel.Race" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
-        <EntityTypeShape EntityType="XF1OnlineModel.Status" Width="1.5" PointX="0.75" PointY="8.25" IsExpanded="true" />
+      <Diagram DiagramId="de1c7590f12548ab96c4bdcfa5215448" Name="Diagram1">
+        <EntityTypeShape EntityType="XF1OnlineModel.Administrator" Width="1.5" PointX="5.75" PointY="1.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="XF1OnlineModel.Championship" Width="1.5" PointX="1.5" PointY="15.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="XF1OnlineModel.League" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="XF1OnlineModel.Pilot" Width="1.5" PointX="0.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="XF1OnlineModel.Player" Width="1.5" PointX="0.75" PointY="4.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="XF1OnlineModel.Race" Width="1.5" PointX="3.75" PointY="15.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="XF1OnlineModel.Racing_Team" Width="1.5" PointX="0.75" PointY="11.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="XF1OnlineModel.Score" Width="1.5" PointX="3" PointY="4.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="XF1OnlineModel.Status" Width="1.5" PointX="1.5" PointY="19.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="XF1OnlineModel.Team" Width="1.5" PointX="3.625" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="XF1OnlineModel.Verification_Request" Width="1.5" PointX="3" PointY="10.75" IsExpanded="true" />
         <AssociationConnector Association="XF1OnlineModel.FK_ChampKey" ManuallyRouted="false" />
-        <AssociationConnector Association="XF1OnlineModel.FK_Country" ManuallyRouted="false" />
+        <AssociationConnector Association="XF1OnlineModel.FK_ChampKey_League" ManuallyRouted="false" />
+        <AssociationConnector Association="XF1OnlineModel.FK_LeagueKey" ManuallyRouted="false" />
+        <AssociationConnector Association="XF1OnlineModel.FK_Pilot_Racing_Team" ManuallyRouted="false" />
+        <AssociationConnector Association="XF1OnlineModel.FK_Team_Username" ManuallyRouted="false" />
+        <AssociationConnector Association="XF1OnlineModel.FK_Username" ManuallyRouted="false" />
+        <AssociationConnector Association="XF1OnlineModel.FK_Verification_Username" ManuallyRouted="false" />
         <AssociationConnector Association="XF1OnlineModel.FK_Status" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="XF1OnlineModel.League" Width="1.5" PointX="3" PointY="9.875" />
-        <EntityTypeShape EntityType="XF1OnlineModel.Player" Width="1.5" PointX="3" PointY="5.375" />
-        <EntityTypeShape EntityType="XF1OnlineModel.Score" Width="1.5" PointX="5.25" PointY="5.875" />
-        <AssociationConnector Association="XF1OnlineModel.FK_ChampKey_League" />
-        <AssociationConnector Association="XF1OnlineModel.FK_Country_Player" />
-        <AssociationConnector Association="XF1OnlineModel.FK_LeagueKey" />
-        <AssociationConnector Association="XF1OnlineModel.FK_Username" />
-        <AssociationConnector Association="XF1OnlineModel.FK_Verification_Username" />
-        <EntityTypeShape EntityType="XF1OnlineModel.Verification_Request" Width="1.5" PointX="5.25" PointY="9.125" />
-        <AssociationConnector Association="XF1OnlineModel.FK_Verification_Username" />
+        <AssociationConnector Association="XF1OnlineModel.FK_Team_Racing_Team" ManuallyRouted="false" />
+        <AssociationConnector Association="XF1OnlineModel.Team_Pilot" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

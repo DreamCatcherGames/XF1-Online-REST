@@ -29,7 +29,7 @@ namespace XF1_Online_REST.LogicScript
         public HttpResponseMessage getRacesByChampionshipRequest(string champId,string token,string salt)
         {
             Error_List errors = new Error_List();
-            errors.addError("Invalid token", tools.verifyAdminToken(token, salt));
+            errors.addError("Invalid token", tools.verifyToken(token, salt,"Administrator"));
             if (!errors.hasErrors())
             {
                 Championship champ= dbContext.Championships.Find(champId);
@@ -56,7 +56,7 @@ namespace XF1_Online_REST.LogicScript
         public HttpResponseMessage getRaceByIdRequest(string champId, string raceName, string country, string token, string salt)
         {
             Error_List errors = new Error_List();
-            errors.addError("Invalid token", tools.verifyAdminToken(token, salt));
+            errors.addError("Invalid token", tools.verifyToken(token, salt, "Administrator"));
             if (!errors.hasErrors())
             {
                 Championship champ = dbContext.Championships.Find(champId);
@@ -81,7 +81,7 @@ namespace XF1_Online_REST.LogicScript
         public HttpResponseMessage raceCreationRequest(Race race,string token,string salt)
         {
             Error_List errors = new Error_List();
-            errors.addError("Invalid token", tools.verifyAdminToken(token, salt));
+            errors.addError("Invalid token", tools.verifyToken(token, salt, "Administrator"));
             if (!errors.hasErrors())
             {
                 errors.fuse(tools.raceDateVerifier(race));
@@ -111,7 +111,7 @@ namespace XF1_Online_REST.LogicScript
         public HttpResponseMessage raceDeletionRequest(Race race,string token,string salt)
         {
             Error_List errors = new Error_List();
-            errors.addError("Invalid token", tools.verifyAdminToken(token, salt));
+            errors.addError("Invalid token", tools.verifyToken(token, salt, "Administrator"));
             if (!errors.hasErrors())
             {
                 dbContext.Races.Remove(race);
