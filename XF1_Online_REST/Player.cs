@@ -18,8 +18,6 @@ namespace XF1_Online_REST
         public Player()
         {
             this.Teams = new HashSet<Team>();
-            this.Scores = new HashSet<Score>();
-            this.Verification_Request = new HashSet<Verification_Request>();
         }
     
         public string Username { get; set; }
@@ -35,9 +33,5 @@ namespace XF1_Online_REST
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Team> Teams { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Score> Scores { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Verification_Request> Verification_Request { get; set; }
     }
 }

@@ -40,11 +40,11 @@ namespace XF1_Online_REST.LogicScripts
         public string generateVerificationToken()
         {
             string token = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
-            token = token.Replace("+", "").Replace("/", "");
+            token = token.Replace("+", "").Replace("/", "").Replace("=", "");
             while (dbContext.Verification_Request.Any(o=>o.Token==token))
             {
                 token = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
-                token = token.Replace("+", "").Replace("/", "");
+                token = token.Replace("+", "").Replace("/", "").Replace("=","");
             }
             return token;
         }
@@ -113,6 +113,13 @@ namespace XF1_Online_REST.LogicScripts
             return dbContext.Players.Any(o => o.Token == tempToken);
         }
 
+        public Player getPlayerByToken(string token,string salt)
+        {
+            string tempToken = encryptToken(token, salt);
+
+            return dbContext.Players.FirstOrDefault(o => o.Token == tempToken);
+        }
+
         /// <summary>
         /// Method to encrypt a password using MD5 encryption method
         /// </summary>
@@ -125,6 +132,7 @@ namespace XF1_Online_REST.LogicScripts
             rng.GetBytes(buff);
 
             string salt = Convert.ToBase64String(buff);
+            salt=salt.Replace("+", "").Replace("/", "");
 
             MD5 md5 = new MD5CryptoServiceProvider();
             byte[] bytes = md5.ComputeHash(System.Text.Encoding.Unicode.GetBytes(password + salt));
@@ -356,7 +364,7 @@ namespace XF1_Online_REST.LogicScripts
             mail.Subject = "Email Confirmation";
             mail.Body = "Hi " + player.First_Name + "! We are thrilled that you're joining us to experience the ultimate F1 fantasy game: XF1 Online!\n\n" +
                         "Click on the next link to confirm your email: \n\n" +
-                        "https://dreamcatchergames.github.io/XF1-online/emailVerification/" + request.Token+"\n\n" +
+                        "http://dreamcatchergames.github.io/XF1-online/emailVerification/" + request.Token+"\n\n" +
                         "See you on the track!\n\n" +
                         "XF1 Team.";
             
@@ -374,5 +382,11 @@ namespace XF1_Online_REST.LogicScripts
         {
             return !dbContext.Racing_Team.Any(o => o.Name == team.Name);
         }
+
+        public Boolean verifyPilotName(Pilot pilot)
+        {
+            return !dbContext.Pilots.Any(o => o.Name == pilot.Name);
+        }
+
     }
 }

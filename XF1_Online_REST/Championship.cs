@@ -18,7 +18,6 @@ namespace XF1_Online_REST
         public Championship()
         {
             this.Races = new HashSet<Race>();
-            this.Leagues = new HashSet<League>();
         }
     
         public string Unique_Key { get; set; }
@@ -32,7 +31,5 @@ namespace XF1_Online_REST
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Race> Races { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<League> Leagues { get; set; }
     }
 }

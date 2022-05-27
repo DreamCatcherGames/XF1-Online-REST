@@ -10,12 +10,11 @@
 namespace XF1_Online_REST
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class Pilot
+    public partial class SP_filterRacingTeams_Result
     {
         public string Name { get; set; }
-        public string Racing_Team { get; set; }
+        public string Country { get; set; }
         public decimal Price { get; set; }
         public string Photo { get; set; }
     }

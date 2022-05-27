@@ -13,7 +13,7 @@ namespace TestSuite
     {
         RaceLogic logic = new RaceLogic();
     
-        Administrator admin = new Administrator("champTestAdmin", "admin1234", "xti00gezkuEvPgAtgwAKg==", "YGXMKyXDIemAKw==");
+        Administrator admin = new Administrator("champTestAdmin", "admin1234", "5IrGsx8OE2mcNPXDvE5dw==", "YGXMKyXDIemAKw==");
         Race race1 = new Race();
 
         /// <summary>

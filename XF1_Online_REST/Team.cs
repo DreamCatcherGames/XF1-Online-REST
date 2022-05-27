@@ -24,9 +24,8 @@ namespace XF1_Online_REST
         public string Username { get; set; }
         public string Racing_Team_Name { get; set; }
     
-        public virtual Player Player { get; set; }
-        public virtual Racing_Team Racing_Team { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Pilot> Pilots { get; set; }
+        public virtual Racing_Team Racing_Team { get; set; }
     }
 }

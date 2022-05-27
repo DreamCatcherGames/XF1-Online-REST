@@ -12,7 +12,7 @@ namespace TestSuite
     public class ChampionshipTests
     {
         ChampionshipLogic logic = new ChampionshipLogic();
-        Administrator admin= new Administrator("champTestAdmin","admin1234", "xti00gezkuEvPgAtgwAKg==", "YGXMKyXDIemAKw==");
+        Administrator admin= new Administrator("champTestAdmin","admin1234", "5IrGsx8OE2mcNPXDvE5dw==", "YGXMKyXDIemAKw==");
         Championship champ1 = new Championship();
         Championship champ2 = new Championship();
         /// <summary>

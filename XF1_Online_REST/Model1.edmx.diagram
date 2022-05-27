@@ -14,7 +14,7 @@
         <EntityTypeShape EntityType="XF1OnlineModel.Racing_Team" Width="1.5" PointX="0.75" PointY="11.625" IsExpanded="true" />
         <EntityTypeShape EntityType="XF1OnlineModel.Score" Width="1.5" PointX="3" PointY="4.875" IsExpanded="true" />
         <EntityTypeShape EntityType="XF1OnlineModel.Status" Width="1.5" PointX="1.5" PointY="19.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="XF1OnlineModel.Team" Width="1.5" PointX="3" PointY="1.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="XF1OnlineModel.Team" Width="1.5" PointX="3.625" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="XF1OnlineModel.Verification_Request" Width="1.5" PointX="3" PointY="10.75" IsExpanded="true" />
         <AssociationConnector Association="XF1OnlineModel.FK_ChampKey" ManuallyRouted="false" />
         <AssociationConnector Association="XF1OnlineModel.FK_ChampKey_League" ManuallyRouted="false" />

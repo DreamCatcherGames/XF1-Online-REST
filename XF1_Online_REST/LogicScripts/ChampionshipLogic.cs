@@ -34,9 +34,6 @@ namespace XF1_Online_REST.LogicScript
             if (!errors.hasErrors())
             {
                 errors.fuse(tools.championshipDateVerifier(champ));
-                Boolean champTimeCond = tools.championshipTimeVerifier(champ);
-                errors.addError("The beginning time of the championship is past it's ending time", champTimeCond);
-
                 errors.purgeErrorsList();
 
                 if (!errors.hasErrors())
@@ -65,14 +62,25 @@ namespace XF1_Online_REST.LogicScript
                     publicLeague.Unique_Key = champ.Unique_Key;
                     publicLeague.Type = "Public";
                     dbContext.Leagues.Add(publicLeague);
-
                     dbContext.SaveChanges();
-
+                    addAllPlayersToCurrentPLeague(publicLeague);
                     return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("Championship added successfully") };
                 }
             }
             return new HttpResponseMessage(HttpStatusCode.Conflict) { Content = new StringContent(JsonConvert.SerializeObject(errors)) };
         }
+        void addAllPlayersToCurrentPLeague(League league)
+        {
+            foreach(Player player in dbContext.Players)
+            {
+                Score score = new Score();
+                score.Points = 0;
+                score.Username = player.Username;
+                league.Scores.Add(score);
+            }
+            dbContext.SaveChanges();
+        }
+
         /// <summary>
         /// Method designed to make the request to delete a championship
         /// </summary>

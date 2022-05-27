@@ -24,6 +24,11 @@ namespace XF1_Online_REST.Controllers
             return logic.getPage(token, salt, amount, page);
         }
 
+        [Route("api/RacingTeams/searchRacingTeam/{token}/{salt}/{amount}/{page}")]
+        public HttpResponseMessage searchPilot([FromBody] Racing_Team team, string token, string salt, int amount, int page)
+        {
+            return logic.searchRacingTeams(token, salt, amount, page, team.Name, team.Country);
+        }
 
         [Route("api/RacingTeams/addRacingTeam/{token}/{salt}")]
         public HttpResponseMessage PostRacingTeam([FromBody]Racing_Team team,string token,string salt)
