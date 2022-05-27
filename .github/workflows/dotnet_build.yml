@@ -2,7 +2,9 @@ name: .NET
 
 on:
   pull_request:
-    branches: [ master, develop ]
+    branches: 
+      - master
+      - develop
 
 env:
   app-name: "xf1onlinerest"
