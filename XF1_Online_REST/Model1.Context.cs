@@ -38,6 +38,7 @@ namespace XF1_Online_REST
         public virtual DbSet<Status> Status { get; set; }
         public virtual DbSet<Team> Teams { get; set; }
         public virtual DbSet<Verification_Request> Verification_Request { get; set; }
+        public virtual DbSet<Notification> Notifications { get; set; }
     
         public virtual int SP_AddPilotsPlayer(string team_Name, string username, string pilot_Name)
         {
