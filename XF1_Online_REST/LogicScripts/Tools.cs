@@ -388,5 +388,37 @@ namespace XF1_Online_REST.LogicScripts
             return !dbContext.Pilots.Any(o => o.Name == pilot.Name);
         }
 
+        public Boolean playerPrivateLeaguesVerification(Player player)
+        {
+            List<Score> scores= dbContext.Scores.Where(o=>o.Username==player.Username).ToList();
+            int leagues = 0;
+            foreach(Score score in scores)
+            {
+                Championship championship = dbContext.Leagues.Find(score.League_Key).Championship;
+
+                if (championship.CurrentChamp) {leagues++;}
+                
+            }
+            return leagues < 2;
+
+        }
+
+        public string getLeagueKey()
+        {
+            var rng = new System.Security.Cryptography.RNGCryptoServiceProvider();
+            var buff = new byte[8];
+            rng.GetBytes(buff);
+
+            string key = Convert.ToBase64String(buff);
+            key = key.Replace("+", "").Replace("/", "").Substring(0, 10);
+            while (!uniqueChampionshipKeyVerificator(key))
+            {
+                buff = new byte[4];
+                rng.GetBytes(buff);
+                key = Convert.ToBase64String(buff);
+                key = key.Replace("+", "").Replace("/", "").Substring(0, 10);
+            }
+            return key;
+        }
     }
 }

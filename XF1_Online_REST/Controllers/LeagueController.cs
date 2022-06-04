@@ -24,9 +24,17 @@ namespace XF1_Online_REST.Controllers
             return logic.getPublicLeague(token,salt);
         }
 
-        // POST: api/League
-        public void Post([FromBody]string value)
+        [Route("api/League/getLeagueById/{token}/{salt}")]
+        public HttpResponseMessage getLeagueById([FromBody]League league,string token, string salt)
         {
+            return logic.getLeagueById(league,token, salt);
+        }
+
+
+        [Route("api/League/createPrivateLeague/{token}/{salt}")]
+        public HttpResponseMessage Post([FromBody]League league,string token,string salt)
+        {
+            return logic.createPrivateLeague(league,token,salt);
         }
 
         // PUT: api/League/5
