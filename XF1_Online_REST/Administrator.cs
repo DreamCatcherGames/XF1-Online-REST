@@ -16,7 +16,7 @@ namespace XF1_Online_REST
     {
         public Administrator() { }
 
-        public Administrator(string Username,string Encrypted_Password,string Token,string Salt)
+        public Administrator(string Username, string Encrypted_Password, string Token, string Salt)
         {
             this.Username = Username;
             this.Encrypted_Password = Encrypted_Password;

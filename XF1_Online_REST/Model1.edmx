@@ -381,7 +381,6 @@
           <Property Name="Beginning_Time" Type="Time" Nullable="false" Precision="7" />
           <Property Name="Ending_Date" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="Ending_Time" Type="Time" Nullable="false" Precision="7" />
-          <NavigationProperty Name="Races" Relationship="Self.FK_ChampKey" FromRole="Championship" ToRole="Race" />
         </EntityType>
         <EntityType Name="League">
           <Key>
@@ -436,7 +435,6 @@
           <Property Name="Beginning_Time" Type="Time" Nullable="false" Precision="7" />
           <Property Name="Ending_Date" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="Ending_Time" Type="Time" Nullable="false" Precision="7" />
-          <NavigationProperty Name="Championship" Relationship="Self.FK_ChampKey" FromRole="Race" ToRole="Championship" />
           <NavigationProperty Name="Status1" Relationship="Self.FK_Status" FromRole="Race" ToRole="Status" />
         </EntityType>
         <EntityType Name="Racing_Team">
