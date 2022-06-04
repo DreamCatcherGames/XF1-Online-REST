@@ -18,6 +18,7 @@ namespace XF1_Online_REST
         public League()
         {
             this.Scores = new HashSet<Score>();
+            this.Notifications = new HashSet<Notification>();
         }
     
         public string Unique_Key { get; set; }
@@ -29,5 +30,7 @@ namespace XF1_Online_REST
         public virtual Championship Championship { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Score> Scores { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Notification> Notifications { get; set; }
     }
 }

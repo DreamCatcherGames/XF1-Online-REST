@@ -420,5 +420,35 @@ namespace XF1_Online_REST.LogicScripts
             }
             return key;
         }
+
+        public void addNotification(Player owner,Player requester,string message,string type,League league)
+        {
+            Notification notification = new Notification();
+            notification.Message = message;
+            notification.Username = owner.Username;
+            if (requester != null)
+            {
+                notification.Requesting_User = requester.Username;
+            }
+            
+            if(league!=null)
+            {
+                notification.League_Key = league.Unique_Key;
+            }
+            notification.Type = type;
+
+            dbContext.Notifications.Add(notification);
+
+            owner.HasNotifications = true;
+
+            dbContext.SaveChanges();
+        }
+
+        public void deleteNotification(Notification notification)
+        {
+
+            dbContext.SP_Delete_Notification(notification.Id);
+            dbContext.SaveChanges();            
+        }
     }
 }

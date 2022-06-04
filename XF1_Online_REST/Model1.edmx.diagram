@@ -27,9 +27,11 @@
         <AssociationConnector Association="XF1OnlineModel.FK_Team_Racing_Team" ManuallyRouted="false" />
         <AssociationConnector Association="XF1OnlineModel.Team_Pilot" ManuallyRouted="false" />
         <AssociationConnector Association="XF1OnlineModel.FK_Owner_League" />
-        <EntityTypeShape EntityType="XF1OnlineModel.Notification" Width="1.5" PointX="7.5" PointY="12.125" />
+        <EntityTypeShape EntityType="XF1OnlineModel.Notification" Width="1.5" PointX="10.5" PointY="5.75" />
+        <AssociationConnector Association="XF1OnlineModel.FK_League_Notification" />
+        <AssociationConnector Association="XF1OnlineModel.FK_Requesting_User_Notification" />
         <AssociationConnector Association="XF1OnlineModel.FK_User_Notification" />
-      </Diagram>
+        </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

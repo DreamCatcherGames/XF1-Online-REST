@@ -18,7 +18,7 @@ namespace XF1_Online_REST
         public Player()
         {
             this.Teams = new HashSet<Team>();
-            this.Notifications = new HashSet<Notification>();
+            this.UserNotifications = new HashSet<Notification>();
         }
     
         public string Username { get; set; }
@@ -31,10 +31,11 @@ namespace XF1_Online_REST
         public string Encrypted_Password { get; set; }
         public string Salt { get; set; }
         public string Token { get; set; }
+        public bool HasNotifications { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Team> Teams { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Notification> Notifications { get; set; }
+        public virtual ICollection<Notification> UserNotifications { get; set; }
     }
 }
