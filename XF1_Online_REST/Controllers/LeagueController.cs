@@ -29,19 +29,30 @@ namespace XF1_Online_REST.Controllers
         {
             return logic.getLeaguePos(leagueId,token,salt);
         }
-        // POST: api/League
-        public void Post([FromBody]string value)
+        
+        [Route("api/League/getLeagueById/{token}/{salt}")]
+        public HttpResponseMessage getLeagueById([FromBody]League league,string token, string salt)
         {
+            return logic.getLeagueById(league,token, salt);
         }
 
-        // PUT: api/League/5
-        public void Put(int id, [FromBody]string value)
+
+        [Route("api/League/createPrivateLeague/{token}/{salt}")]
+        public HttpResponseMessage createPrivateLeague([FromBody]League league,string token,string salt)
         {
+            return logic.createPrivateLeague(league,token,salt);
         }
 
-        // DELETE: api/League/5
-        public void Delete(int id)
+        [Route("api/League/joinLeague/{token}/{salt}")]
+        public HttpResponseMessage joinLeague([FromBody] League league, string token, string salt)
         {
+            return logic.joinLeagueRequest(league, token, salt);
+        }
+
+        [Route("api/League/aproveJoin/{cond}/{token}/{salt}")]
+        public HttpResponseMessage aproveJoin([FromBody] Notification notification, string token, string salt,Boolean cond)
+        {
+            return logic.approveJoin(notification, token, salt,cond);
         }
     }
 }

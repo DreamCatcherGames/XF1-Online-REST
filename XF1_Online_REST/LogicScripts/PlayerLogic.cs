@@ -185,5 +185,45 @@ namespace XF1_Online_REST.LogicScripts
             }
 
         }
+
+        public HttpResponseMessage hasNotifications(string token, string salt)
+        {
+            Error_List errors = new Error_List();
+            errors.addError("Invalid token", tools.verifyToken(token, salt, "Player"));
+
+            if (!errors.hasErrors())
+            {
+                Player tempPlayer = tools.getPlayerByToken(token, salt);
+                return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(tempPlayer.HasNotifications.ToString()) };
+            }
+            return new HttpResponseMessage(HttpStatusCode.Conflict) { Content = new StringContent(JsonConvert.SerializeObject(errors)) };
+        }
+
+        public HttpResponseMessage getNotifications(string token, string salt)
+        {
+            Error_List errors = new Error_List();
+            errors.addError("Invalid token", tools.verifyToken(token, salt, "Player"));
+
+            if (!errors.hasErrors())
+            {
+                Player tempPlayer = tools.getPlayerByToken(token, salt);
+                return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(JsonConvert.SerializeObject(tempPlayer.UserNotifications)) };
+            }
+            return new HttpResponseMessage(HttpStatusCode.Conflict) { Content = new StringContent(JsonConvert.SerializeObject(errors)) };
+        }
+
+        public HttpResponseMessage deleteNotification(Notification notification, string token, string salt)
+        {
+            Error_List errors = new Error_List();
+            errors.addError("Invalid token", tools.verifyToken(token, salt, "Player"));
+
+            if (!errors.hasErrors())
+            {
+                tools.deleteNotification(notification);
+                return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("Notification deleted succesfully")};
+                
+            }
+            return new HttpResponseMessage(HttpStatusCode.Conflict) { Content = new StringContent(JsonConvert.SerializeObject(errors)) };
+        }
     }
 }

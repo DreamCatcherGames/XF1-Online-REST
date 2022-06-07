@@ -20,7 +20,7 @@
             <PropertyRef Name="Unique_Key" />
           </Key>
           <Property Name="Unique_Key" Type="varchar" MaxLength="6" Nullable="false" />
-          <Property Name="Name" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="CurrentChamp" Type="bit" Nullable="false" />
           <Property Name="Rules_Description" Type="varchar" MaxLength="1000" />
           <Property Name="Beginning_Date" Type="date" Nullable="false" />
@@ -32,10 +32,22 @@
           <Key>
             <PropertyRef Name="Unique_Key" />
           </Key>
-          <Property Name="Unique_Key" Type="varchar" MaxLength="6" Nullable="false" />
+          <Property Name="Unique_Key" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="Champ_Key" Type="varchar" MaxLength="6" Nullable="false" />
-          <Property Name="Name" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="Type" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="OwnerUsername" Type="varchar" MaxLength="30" />
+        </EntityType>
+        <EntityType Name="Notification">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Message" Type="varchar" MaxLength="300" Nullable="false" />
+          <Property Name="Username" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="League_Key" Type="varchar" MaxLength="10" />
+          <Property Name="Requesting_User" Type="varchar" MaxLength="30" />
+          <Property Name="Type" Type="varchar" MaxLength="30" Nullable="false" />
         </EntityType>
         <EntityType Name="Pilot">
           <Key>
@@ -60,6 +72,7 @@
           <Property Name="Encrypted_Password" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Salt" Type="varchar" MaxLength="32" Nullable="false" />
           <Property Name="Token" Type="varchar" MaxLength="32" Nullable="false" />
+          <Property Name="HasNotifications" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Race">
           <Key>
@@ -93,7 +106,7 @@
             <PropertyRef Name="League_Key" />
             <PropertyRef Name="Username" />
           </Key>
-          <Property Name="League_Key" Type="varchar" MaxLength="6" Nullable="false" />
+          <Property Name="League_Key" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="Username" Type="varchar" MaxLength="30" Nullable="false" />
           <Property Name="Points" Type="int" Nullable="false" />
         </EntityType>
@@ -157,10 +170,20 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_League_Notification">
+          <End Role="League" Type="Self.League" Multiplicity="0..1" />
+          <End Role="Notification" Type="Self.Notification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="League">
+              <PropertyRef Name="Unique_Key" />
+            </Principal>
+            <Dependent Role="Notification">
+              <PropertyRef Name="League_Key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_LeagueKey">
-          <End Role="League" Type="Self.League" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
+          <End Role="League" Type="Self.League" Multiplicity="1" />
           <End Role="Score" Type="Self.Score" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="League">
@@ -168,6 +191,20 @@
             </Principal>
             <Dependent Role="Score">
               <PropertyRef Name="League_Key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Owner_League">
+          <End Role="Player" Type="Self.Player" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="League" Type="Self.League" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Player">
+              <PropertyRef Name="Username" />
+            </Principal>
+            <Dependent Role="League">
+              <PropertyRef Name="OwnerUsername" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -194,6 +231,18 @@
             </Principal>
             <Dependent Role="Pilot">
               <PropertyRef Name="Racing_Team" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Requesting_User_Notification">
+          <End Role="Player" Type="Self.Player" Multiplicity="1" />
+          <End Role="Notification" Type="Self.Notification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Player">
+              <PropertyRef Name="Username" />
+            </Principal>
+            <Dependent Role="Notification">
+              <PropertyRef Name="Username" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -251,6 +300,20 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_User_Notification">
+          <End Role="Player" Type="Self.Player" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Notification" Type="Self.Notification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Player">
+              <PropertyRef Name="Username" />
+            </Principal>
+            <Dependent Role="Notification">
+              <PropertyRef Name="Username" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Username">
           <End Role="Player" Type="Self.Player" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -289,6 +352,9 @@
           <Parameter Name="Username" Type="varchar" Mode="In" />
           <Parameter Name="Racing_Team_Name" Type="varchar" Mode="In" />
         </Function>
+        <Function Name="SP_Delete_Notification" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Notification_Id" Type="int" Mode="In" />
+        </Function>
         <Function Name="SP_filterPilots" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Name" Type="varchar" Mode="In" />
           <Parameter Name="Racing_Team" Type="varchar" Mode="In" />
@@ -301,6 +367,7 @@
           <EntitySet Name="Administrator" EntityType="Self.Administrator" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Championship" EntityType="Self.Championship" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="League" EntityType="Self.League" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Notification" EntityType="Self.Notification" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Pilot" EntityType="Self.Pilot" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Player" EntityType="Self.Player" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Race" EntityType="Self.Race" Schema="dbo" store:Type="Tables" />
@@ -318,9 +385,17 @@
             <End Role="Championship" EntitySet="Championship" />
             <End Role="League" EntitySet="League" />
           </AssociationSet>
+          <AssociationSet Name="FK_League_Notification" Association="Self.FK_League_Notification">
+            <End Role="League" EntitySet="League" />
+            <End Role="Notification" EntitySet="Notification" />
+          </AssociationSet>
           <AssociationSet Name="FK_LeagueKey" Association="Self.FK_LeagueKey">
             <End Role="League" EntitySet="League" />
             <End Role="Score" EntitySet="Score" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Owner_League" Association="Self.FK_Owner_League">
+            <End Role="Player" EntitySet="Player" />
+            <End Role="League" EntitySet="League" />
           </AssociationSet>
           <AssociationSet Name="FK_Pilot_Name_Team_Pilot" Association="Self.FK_Pilot_Name_Team_Pilot">
             <End Role="Pilot" EntitySet="Pilot" />
@@ -329,6 +404,10 @@
           <AssociationSet Name="FK_Pilot_Racing_Team" Association="Self.FK_Pilot_Racing_Team">
             <End Role="Racing_Team" EntitySet="Racing_Team" />
             <End Role="Pilot" EntitySet="Pilot" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Requesting_User_Notification" Association="Self.FK_Requesting_User_Notification">
+            <End Role="Player" EntitySet="Player" />
+            <End Role="Notification" EntitySet="Notification" />
           </AssociationSet>
           <AssociationSet Name="FK_Status" Association="Self.FK_Status">
             <End Role="Status" EntitySet="Status" />
@@ -345,6 +424,10 @@
           <AssociationSet Name="FK_Team_Username" Association="Self.FK_Team_Username">
             <End Role="Player" EntitySet="Player" />
             <End Role="Team" EntitySet="Team" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Notification" Association="Self.FK_User_Notification">
+            <End Role="Player" EntitySet="Player" />
+            <End Role="Notification" EntitySet="Notification" />
           </AssociationSet>
           <AssociationSet Name="FK_Username" Association="Self.FK_Username">
             <End Role="Player" EntitySet="Player" />
@@ -374,24 +457,27 @@
             <PropertyRef Name="Unique_Key" />
           </Key>
           <Property Name="Unique_Key" Type="String" MaxLength="6" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="CurrentChamp" Type="Boolean" Nullable="false" />
           <Property Name="Rules_Description" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
           <Property Name="Beginning_Date" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="Beginning_Time" Type="Time" Nullable="false" Precision="7" />
           <Property Name="Ending_Date" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="Ending_Time" Type="Time" Nullable="false" Precision="7" />
+          <NavigationProperty Name="Races" Relationship="Self.FK_ChampKey" FromRole="Championship" ToRole="Race" />
         </EntityType>
         <EntityType Name="League">
           <Key>
             <PropertyRef Name="Unique_Key" />
           </Key>
-          <Property Name="Unique_Key" Type="String" MaxLength="6" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Unique_Key" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Champ_Key" Type="String" MaxLength="6" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Type" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="Championship" Relationship="Self.FK_ChampKey_League" FromRole="League" ToRole="Championship" />
           <NavigationProperty Name="Scores" Relationship="Self.FK_LeagueKey" FromRole="League" ToRole="Score" />
+          <Property Name="OwnerUsername" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Notifications" Relationship="XF1OnlineModel.FK_League_Notification" FromRole="League" ToRole="Notification" />
         </EntityType>
         <EntityType Name="Pilot">
           <Key>
@@ -417,6 +503,8 @@
           <Property Name="Salt" Type="String" MaxLength="32" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Token" Type="String" MaxLength="32" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="Teams" Relationship="Self.FK_Team_Username" FromRole="Player" ToRole="Team" />
+          <Property Name="HasNotifications" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="UserNotifications" Relationship="XF1OnlineModel.FK_User_Notification" FromRole="Player" ToRole="Notification" />
         </EntityType>
         <EntityType Name="Race">
           <Key>
@@ -435,7 +523,7 @@
           <Property Name="Beginning_Time" Type="Time" Nullable="false" Precision="7" />
           <Property Name="Ending_Date" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="Ending_Time" Type="Time" Nullable="false" Precision="7" />
-          <NavigationProperty Name="Status1" Relationship="Self.FK_Status" FromRole="Race" ToRole="Status" />
+          <NavigationProperty Name="Championship" Relationship="Self.FK_ChampKey" FromRole="Race" ToRole="Championship" />
         </EntityType>
         <EntityType Name="Racing_Team">
           <Key>
@@ -451,7 +539,7 @@
             <PropertyRef Name="League_Key" />
             <PropertyRef Name="Username" />
           </Key>
-          <Property Name="League_Key" Type="String" MaxLength="6" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="League_Key" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Username" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Points" Type="Int32" Nullable="false" />
         </EntityType>
@@ -460,7 +548,6 @@
             <PropertyRef Name="Type" />
           </Key>
           <Property Name="Type" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Races" Relationship="Self.FK_Status" FromRole="Status" ToRole="Race" />
         </EntityType>
         <EntityType Name="Team">
           <Key>
@@ -471,7 +558,6 @@
           <Property Name="Username" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Racing_Team_Name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Pilots" Relationship="Self.Team_Pilot" FromRole="Team" ToRole="Pilot" />
-          <NavigationProperty Name="Racing_Team" Relationship="XF1OnlineModel.FK_Team_Racing_Team" FromRole="Team" ToRole="Racing_Team" />
         </EntityType>
         <EntityType Name="Verification_Request">
           <Key>
@@ -479,7 +565,6 @@
           </Key>
           <Property Name="Token" Type="String" MaxLength="32" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Username" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Player" Relationship="Self.FK_Verification_Username" FromRole="Verification_Request" ToRole="Player" />
         </EntityType>
         <Association Name="FK_ChampKey">
           <End Role="Championship" Type="Self.Championship" Multiplicity="1">
@@ -659,14 +744,6 @@
             <End Role="Pilot" EntitySet="Pilots" />
             <End Role="Team" EntitySet="Teams" />
           </AssociationSet>
-          <FunctionImport Name="SP_filterPilots" ReturnType="Collection(XF1OnlineModel.SP_filterPilots_Result)">
-            <Parameter Name="Name" Mode="In" Type="String" />
-            <Parameter Name="Racing_Team" Mode="In" Type="String" />
-          </FunctionImport>
-          <FunctionImport Name="SP_filterRacingTeams" ReturnType="Collection(XF1OnlineModel.SP_filterRacingTeams_Result)">
-            <Parameter Name="Name" Mode="In" Type="String" />
-            <Parameter Name="Country" Mode="In" Type="String" />
-          </FunctionImport>
           <FunctionImport Name="SP_AddPilotsPlayer">
             <Parameter Name="Team_Name" Mode="In" Type="String" />
             <Parameter Name="Username" Mode="In" Type="String" />
@@ -677,7 +754,35 @@
             <Parameter Name="Username" Mode="In" Type="String" />
             <Parameter Name="Racing_Team_Name" Mode="In" Type="String" />
           </FunctionImport>
-        </EntityContainer>
+          <FunctionImport Name="SP_filterPilots" ReturnType="Collection(XF1OnlineModel.SP_filterPilots_Result)">
+            <Parameter Name="Name" Mode="In" Type="String" />
+            <Parameter Name="Racing_Team" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SP_filterRacingTeams" ReturnType="Collection(XF1OnlineModel.SP_filterRacingTeams_Result)">
+            <Parameter Name="Name" Mode="In" Type="String" />
+            <Parameter Name="Country" Mode="In" Type="String" />
+          </FunctionImport>
+          <AssociationSet Name="FK_Owner_League" Association="XF1OnlineModel.FK_Owner_League">
+            <End Role="Player" EntitySet="Players" />
+            <End Role="League" EntitySet="Leagues" />
+          </AssociationSet>
+          <EntitySet Name="Notifications" EntityType="XF1OnlineModel.Notification" />
+          <AssociationSet Name="FK_League_Notification" Association="XF1OnlineModel.FK_League_Notification">
+            <End Role="League" EntitySet="Leagues" />
+            <End Role="Notification" EntitySet="Notifications" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Requesting_User_Notification" Association="XF1OnlineModel.FK_Requesting_User_Notification">
+            <End Role="Player" EntitySet="Players" />
+            <End Role="Notification" EntitySet="Notifications" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Notification" Association="XF1OnlineModel.FK_User_Notification">
+            <End Role="Player" EntitySet="Players" />
+            <End Role="Notification" EntitySet="Notifications" />
+          </AssociationSet>
+          <FunctionImport Name="SP_Delete_Notification">
+            <Parameter Name="Notification_Id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          </EntityContainer>
         <ComplexType Name="SP_filterPilots_Result">
           <Property Type="String" Name="Name" Nullable="false" MaxLength="30" />
           <Property Type="String" Name="Racing_Team" Nullable="false" MaxLength="30" />
@@ -690,7 +795,70 @@
           <Property Type="Decimal" Name="Price" Nullable="false" Precision="9" Scale="2" />
           <Property Type="String" Name="Photo" Nullable="false" MaxLength="200" />
         </ComplexType>
-      </Schema>
+        <Association Name="FK_Owner_League">
+          <End Type="XF1OnlineModel.Player" Role="Player" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="XF1OnlineModel.League" Role="League" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Player">
+              <PropertyRef Name="Username" />
+            </Principal>
+            <Dependent Role="League">
+              <PropertyRef Name="OwnerUsername" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Notification">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Message" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="Username" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="League_Key" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Requesting_User" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="Type" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <Association Name="FK_League_Notification">
+          <End Type="XF1OnlineModel.League" Role="League" Multiplicity="0..1" />
+          <End Type="XF1OnlineModel.Notification" Role="Notification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="League">
+              <PropertyRef Name="Unique_Key" />
+            </Principal>
+            <Dependent Role="Notification">
+              <PropertyRef Name="League_Key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Requesting_User_Notification">
+          <End Type="XF1OnlineModel.Player" Role="Player" Multiplicity="1" />
+          <End Type="XF1OnlineModel.Notification" Role="Notification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Player">
+              <PropertyRef Name="Username" />
+            </Principal>
+            <Dependent Role="Notification">
+              <PropertyRef Name="Username" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Notification">
+          <End Type="XF1OnlineModel.Player" Role="Player" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="XF1OnlineModel.Notification" Role="Notification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Player">
+              <PropertyRef Name="Username" />
+            </Principal>
+            <Dependent Role="Notification">
+              <PropertyRef Name="Username" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -724,6 +892,7 @@
           <EntitySetMapping Name="Leagues">
             <EntityTypeMapping TypeName="XF1OnlineModel.League">
               <MappingFragment StoreEntitySet="League">
+                <ScalarProperty Name="OwnerUsername" ColumnName="OwnerUsername" />
                 <ScalarProperty Name="Unique_Key" ColumnName="Unique_Key" />
                 <ScalarProperty Name="Champ_Key" ColumnName="Champ_Key" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -744,6 +913,7 @@
           <EntitySetMapping Name="Players">
             <EntityTypeMapping TypeName="XF1OnlineModel.Player">
               <MappingFragment StoreEntitySet="Player">
+                <ScalarProperty Name="HasNotifications" ColumnName="HasNotifications" />
                 <ScalarProperty Name="Username" ColumnName="Username" />
                 <ScalarProperty Name="Active" ColumnName="Active" />
                 <ScalarProperty Name="Country" ColumnName="Country" />
@@ -826,6 +996,8 @@
               <ScalarProperty Name="Username" ColumnName="Username" />
             </EndProperty>
           </AssociationSetMapping>
+          <FunctionImportMapping FunctionImportName="SP_AddPilotsPlayer" FunctionName="XF1OnlineModel.Store.SP_AddPilotsPlayer" />
+          <FunctionImportMapping FunctionImportName="SP_AddRacing_TeamPlayer" FunctionName="XF1OnlineModel.Store.SP_AddRacing_TeamPlayer" />
           <FunctionImportMapping FunctionImportName="SP_filterPilots" FunctionName="XF1OnlineModel.Store.SP_filterPilots">
             <ResultMapping>
               <ComplexTypeMapping TypeName="XF1OnlineModel.SP_filterPilots_Result">
@@ -846,9 +1018,20 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="SP_AddPilotsPlayer" FunctionName="XF1OnlineModel.Store.SP_AddPilotsPlayer" />
-          <FunctionImportMapping FunctionImportName="SP_AddRacing_TeamPlayer" FunctionName="XF1OnlineModel.Store.SP_AddRacing_TeamPlayer" />
-        </EntityContainerMapping>
+          <EntitySetMapping Name="Notifications">
+            <EntityTypeMapping TypeName="XF1OnlineModel.Notification">
+              <MappingFragment StoreEntitySet="Notification">
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Requesting_User" ColumnName="Requesting_User" />
+                <ScalarProperty Name="League_Key" ColumnName="League_Key" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SP_Delete_Notification" FunctionName="XF1OnlineModel.Store.SP_Delete_Notification" />
+          </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
   </edmx:Runtime>

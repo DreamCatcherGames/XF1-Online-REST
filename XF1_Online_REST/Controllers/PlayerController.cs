@@ -48,14 +48,29 @@ namespace XF1_Online_REST.Controllers
         {
             return logic.getProfile(token,salt);
         }
+
+        [Route("api/Player/hasNotifications/{token}/{salt}")]
+        public HttpResponseMessage hasNotifications(string token, string salt)
+        {
+            return logic.hasNotifications(token, salt);
+        }
+
+        [Route("api/Player/getNotifications/{token}/{salt}")]
+        public HttpResponseMessage getNotifications(string token, string salt)
+        {
+            return logic.getNotifications(token, salt);
+        }
+
         [Route("api/Player/updateProfile/{token}/{salt}")]
-        public HttpResponseMessage Put(string token,string salt, [FromBody]Player player)
+        public HttpResponseMessage updateProfile([FromBody] Player player,string token,string salt)
         {
             return logic.updateProfile(token, salt, player);
         }
-        // DELETE: api/Player/5
-        public void Delete(int id)
+
+        [Route("api/Player/deleteNotification/{token}/{salt}")]
+        public HttpResponseMessage deleteNotification([FromBody]Notification notification, string token, string salt)
         {
+            return logic.deleteNotification(notification, token, salt);
         }
     }
 }

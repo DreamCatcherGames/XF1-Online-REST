@@ -16,7 +16,5 @@ namespace XF1_Online_REST
     {
         public string Token { get; set; }
         public string Username { get; set; }
-    
-        public virtual Player Player { get; set; }
     }
 }

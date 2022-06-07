@@ -26,6 +26,5 @@ namespace XF1_Online_REST
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Pilot> Pilots { get; set; }
-        public virtual Racing_Team Racing_Team { get; set; }
     }
 }

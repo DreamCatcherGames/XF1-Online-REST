@@ -12,8 +12,13 @@ namespace XF1_Online_REST
     using System;
     using System.Collections.Generic;
     
-    public partial class Status
+    public partial class Notification
     {
+        public int Id { get; set; }
+        public string Message { get; set; }
+        public string Username { get; set; }
+        public string League_Key { get; set; }
+        public string Requesting_User { get; set; }
         public string Type { get; set; }
     }
 }

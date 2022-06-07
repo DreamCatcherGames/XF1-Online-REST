@@ -211,6 +211,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Model1.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Notification.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Pilot.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>

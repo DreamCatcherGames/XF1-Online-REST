@@ -26,6 +26,6 @@ namespace XF1_Online_REST
         public System.DateTime Ending_Date { get; set; }
         public System.TimeSpan Ending_Time { get; set; }
     
-        public virtual Status Status1 { get; set; }
+        public virtual Championship Championship { get; set; }
     }
 }

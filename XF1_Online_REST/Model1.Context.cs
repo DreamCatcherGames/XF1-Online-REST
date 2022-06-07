@@ -38,32 +38,7 @@ namespace XF1_Online_REST
         public virtual DbSet<Status> Status { get; set; }
         public virtual DbSet<Team> Teams { get; set; }
         public virtual DbSet<Verification_Request> Verification_Request { get; set; }
-    
-        public virtual ObjectResult<SP_filterPilots_Result> SP_filterPilots(string name, string racing_Team)
-        {
-            var nameParameter = name != null ?
-                new ObjectParameter("Name", name) :
-                new ObjectParameter("Name", typeof(string));
-    
-            var racing_TeamParameter = racing_Team != null ?
-                new ObjectParameter("Racing_Team", racing_Team) :
-                new ObjectParameter("Racing_Team", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_filterPilots_Result>("SP_filterPilots", nameParameter, racing_TeamParameter);
-        }
-    
-        public virtual ObjectResult<SP_filterRacingTeams_Result> SP_filterRacingTeams(string name, string country)
-        {
-            var nameParameter = name != null ?
-                new ObjectParameter("Name", name) :
-                new ObjectParameter("Name", typeof(string));
-    
-            var countryParameter = country != null ?
-                new ObjectParameter("Country", country) :
-                new ObjectParameter("Country", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_filterRacingTeams_Result>("SP_filterRacingTeams", nameParameter, countryParameter);
-        }
+        public virtual DbSet<Notification> Notifications { get; set; }
     
         public virtual int SP_AddPilotsPlayer(string team_Name, string username, string pilot_Name)
         {
@@ -97,6 +72,41 @@ namespace XF1_Online_REST
                 new ObjectParameter("Racing_Team_Name", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_AddRacing_TeamPlayer", team_NameParameter, usernameParameter, racing_Team_NameParameter);
+        }
+    
+        public virtual ObjectResult<SP_filterPilots_Result> SP_filterPilots(string name, string racing_Team)
+        {
+            var nameParameter = name != null ?
+                new ObjectParameter("Name", name) :
+                new ObjectParameter("Name", typeof(string));
+    
+            var racing_TeamParameter = racing_Team != null ?
+                new ObjectParameter("Racing_Team", racing_Team) :
+                new ObjectParameter("Racing_Team", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_filterPilots_Result>("SP_filterPilots", nameParameter, racing_TeamParameter);
+        }
+    
+        public virtual ObjectResult<SP_filterRacingTeams_Result> SP_filterRacingTeams(string name, string country)
+        {
+            var nameParameter = name != null ?
+                new ObjectParameter("Name", name) :
+                new ObjectParameter("Name", typeof(string));
+    
+            var countryParameter = country != null ?
+                new ObjectParameter("Country", country) :
+                new ObjectParameter("Country", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_filterRacingTeams_Result>("SP_filterRacingTeams", nameParameter, countryParameter);
+        }
+    
+        public virtual int SP_Delete_Notification(Nullable<int> notification_Id)
+        {
+            var notification_IdParameter = notification_Id.HasValue ?
+                new ObjectParameter("Notification_Id", notification_Id) :
+                new ObjectParameter("Notification_Id", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_Delete_Notification", notification_IdParameter);
         }
     }
 }
