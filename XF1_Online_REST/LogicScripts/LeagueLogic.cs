@@ -129,6 +129,7 @@ namespace XF1_Online_REST.LogicScripts
                         league.Unique_Key = tools.getLeagueKey();
                         league.Type = "Private";
                         league.OwnerUsername = owner.Username;
+                        league.Champ_Key = dbContext.Championships.FirstOrDefault(o => o.CurrentChamp).Unique_Key;
                         dbContext.Leagues.Add(league);
 
                         dbContext.SaveChanges();
