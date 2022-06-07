@@ -20,6 +20,11 @@ namespace XF1_Online_REST.LogicScripts
             this.tools = new Tools();
         }
 
+        struct leaguePos
+        {
+            public int position;
+            public int leaguePlayerCount;
+        }
 
         public League getLeagueByCode(string code)
         {
@@ -66,6 +71,41 @@ namespace XF1_Online_REST.LogicScripts
                 if(tempLeague!=null)
                 {
                     return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(JsonConvert.SerializeObject(tempLeague))};
+                }
+            }
+            errors.purgeErrorsList();
+            return new HttpResponseMessage(HttpStatusCode.Conflict) { Content = new StringContent(JsonConvert.SerializeObject(errors)) };
+        }
+
+        public HttpResponseMessage getLeaguePos(string leagueId,string token,string salt)
+        {
+            Error_List errors = new Error_List();
+            errors.addError("Invalid token", tools.verifyToken(token, salt, "Administrator") || tools.verifyToken(token, salt, "Player"));
+            if (!errors.hasErrors())
+            {
+                League league;
+                if(leagueId=="Public")
+                {
+                    league = this.dbContext.Leagues.FirstOrDefault(o => o.Championship.CurrentChamp == true && o.Unique_Key==o.Championship.Unique_Key);
+                }
+                else 
+                {
+                    league = this.dbContext.Leagues.Find(leagueId);
+                }
+
+                errors.addError("The specified league does not currently exists",league!=null);
+                if(league!=null)
+                {
+                    Player player = tools.getPlayerByToken(token, salt);
+                    List<Score> scores=dbContext.Scores.Where(o=>o.League_Key==league.Unique_Key).ToList();
+
+                    leaguePos leaguePosPlayer = new leaguePos();
+
+                    leaguePosPlayer.position=scores.FindIndex(o => o.Username == player.Username)+1;
+                    leaguePosPlayer.leaguePlayerCount=scores.Count;
+
+                    return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(JsonConvert.SerializeObject(leaguePosPlayer))};
+
                 }
             }
             errors.purgeErrorsList();
@@ -195,6 +235,26 @@ namespace XF1_Online_REST.LogicScripts
                         return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("Request processed successfully") };
                     }
                 }
+            }
+            errors.purgeErrorsList();
+            return new HttpResponseMessage(HttpStatusCode.Conflict) { Content = new StringContent(JsonConvert.SerializeObject(errors)) };
+        }
+
+         public HttpResponseMessage getPrivateLeagues(string token,string salt)
+        {
+            Error_List errors = new Error_List();
+            errors.addError("Invalid token", tools.verifyToken(token, salt, "Administrator") || tools.verifyToken(token, salt, "Player"));
+            if (!errors.hasErrors())
+            {
+                Player player = tools.getPlayerByToken(token, salt);
+                Boolean privateLeaguesVerification = tools.playerPrivateLeaguesVerification(player);
+                errors.addError("The player already belongs to a private league or owns one", privateLeaguesVerification);
+                if(privateLeaguesVerification)
+                {
+                    List<League> privateLeagues = this.dbContext.Leagues.Where(o => o.Type == "Private"&& o.Championship.CurrentChamp).ToList();
+                    return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(JsonConvert.SerializeObject(privateLeagues))};
+                }
+
             }
             errors.purgeErrorsList();
             return new HttpResponseMessage(HttpStatusCode.Conflict) { Content = new StringContent(JsonConvert.SerializeObject(errors)) };

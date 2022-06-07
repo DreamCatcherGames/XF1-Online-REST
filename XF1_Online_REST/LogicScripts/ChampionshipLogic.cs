@@ -76,7 +76,7 @@ namespace XF1_Online_REST.LogicScript
                 Score score = new Score();
                 score.Points = 0;
                 score.Username = player.Username;
-                league.Scores.Add(score);
+                dbContext.Scores.Add(score);
             }
             dbContext.SaveChanges();
         }

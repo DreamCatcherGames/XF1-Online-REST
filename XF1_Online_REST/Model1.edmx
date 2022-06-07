@@ -474,10 +474,8 @@
           <Property Name="Champ_Key" Type="String" MaxLength="6" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Type" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Championship" Relationship="Self.FK_ChampKey_League" FromRole="League" ToRole="Championship" />
-          <NavigationProperty Name="Scores" Relationship="Self.FK_LeagueKey" FromRole="League" ToRole="Score" />
           <Property Name="OwnerUsername" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Notifications" Relationship="XF1OnlineModel.FK_League_Notification" FromRole="League" ToRole="Notification" />
+          <NavigationProperty Name="Championship" Relationship="XF1OnlineModel.FK_ChampKey_League" FromRole="League" ToRole="Championship" />
         </EntityType>
         <EntityType Name="Pilot">
           <Key>

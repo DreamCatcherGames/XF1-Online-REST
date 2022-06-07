@@ -24,6 +24,12 @@ namespace XF1_Online_REST.Controllers
             return logic.getPublicLeague(token,salt);
         }
 
+        [Route("api/League/getPlayerPos/{leagueId}/{token}/{salt}")]
+        public HttpResponseMessage getPlayerPos(string leagueId,string token, string salt)
+        {
+            return logic.getLeaguePos(leagueId,token,salt);
+        }
+        
         [Route("api/League/getLeagueById/{token}/{salt}")]
         public HttpResponseMessage getLeagueById([FromBody]League league,string token, string salt)
         {
@@ -35,6 +41,12 @@ namespace XF1_Online_REST.Controllers
         public HttpResponseMessage createPrivateLeague([FromBody]League league,string token,string salt)
         {
             return logic.createPrivateLeague(league,token,salt);
+        }
+
+        [Route("api/League/getPrivateLeagues/{token}/{salt}")]
+        public HttpResponseMessage getPrivateLeagues(string token, string salt)
+        {
+            return logic.getPrivateLeagues(token, salt);
         }
 
         [Route("api/League/joinLeague/{token}/{salt}")]

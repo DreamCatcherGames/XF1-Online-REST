@@ -14,13 +14,6 @@ namespace XF1_Online_REST
     
     public partial class League
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public League()
-        {
-            this.Scores = new HashSet<Score>();
-            this.Notifications = new HashSet<Notification>();
-        }
-    
         public string Unique_Key { get; set; }
         public string Champ_Key { get; set; }
         public string Name { get; set; }
@@ -28,9 +21,5 @@ namespace XF1_Online_REST
         public string OwnerUsername { get; set; }
     
         public virtual Championship Championship { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Score> Scores { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Notification> Notifications { get; set; }
     }
 }

@@ -394,7 +394,8 @@ namespace XF1_Online_REST.LogicScripts
             int leagues = 0;
             foreach(Score score in scores)
             {
-                Championship championship = dbContext.Leagues.Find(score.League_Key).Championship;
+                League league = dbContext.Leagues.Find(score.League_Key);
+                Championship championship = dbContext.Championships.Find(league.Champ_Key);
 
                 if (championship.CurrentChamp) {leagues++;}
                 
