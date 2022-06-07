@@ -246,10 +246,18 @@ namespace XF1_Online_REST.LogicScripts
             errors.addError("Invalid token", tools.verifyToken(token, salt, "Administrator") || tools.verifyToken(token, salt, "Player"));
             if (!errors.hasErrors())
             {
-                Championship champ = dbContext.Championships.FirstOrDefault(o => o.CurrentChamp == true);
-                return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(JsonConvert.SerializeObject(dbContext.Leagues.Find(champ.Unique_Key))) };
+                Player player = tools.getPlayerByToken(token, salt);
+                Boolean privateLeaguesVerification = tools.playerPrivateLeaguesVerification(player);
+                errors.addError("The player already belongs to a private league or owns one", privateLeaguesVerification);
+                if(privateLeaguesVerification)
+                {
+                    List<League> privateLeagues = this.dbContext.Leagues.Where(o => o.Type == "Private"&& o.Championship.CurrentChamp).ToList();
+                    return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(JsonConvert.SerializeObject(privateLeagues))};
+                }
 
             }
+            errors.purgeErrorsList();
+            return new HttpResponseMessage(HttpStatusCode.Conflict) { Content = new StringContent(JsonConvert.SerializeObject(errors)) };
         }
     }
 }

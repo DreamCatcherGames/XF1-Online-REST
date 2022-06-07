@@ -43,6 +43,12 @@ namespace XF1_Online_REST.Controllers
             return logic.createPrivateLeague(league,token,salt);
         }
 
+        [Route("api/League/getPrivateLeagues/{token}/{salt}")]
+        public HttpResponseMessage getPrivateLeagues(string token, string salt)
+        {
+            return logic.getPrivateLeagues(token, salt);
+        }
+
         [Route("api/League/joinLeague/{token}/{salt}")]
         public HttpResponseMessage joinLeague([FromBody] League league, string token, string salt)
         {
