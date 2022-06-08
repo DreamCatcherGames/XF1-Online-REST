@@ -35,7 +35,6 @@ namespace XF1_Online_REST.LogicScripts
             {
                 Boolean correctPasswordCond = tools.verifyPassword(player.Encrypted_Password, testPlayer.Encrypted_Password, testPlayer.Salt);
                 errors.addError("Incorrect username or password", correctPasswordCond);
-                errors.addError("The user has not been verified", testPlayer.Active);
                 if (!errors.hasErrors())
                 {
                     string token = tools.getToken(player.Salt);
@@ -222,6 +221,46 @@ namespace XF1_Online_REST.LogicScripts
                 tools.deleteNotification(notification);
                 return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("Notification deleted succesfully")};
                 
+            }
+            return new HttpResponseMessage(HttpStatusCode.Conflict) { Content = new StringContent(JsonConvert.SerializeObject(errors)) };
+        }
+
+        public HttpResponseMessage getPrivateLeague(string token, string salt)
+        {
+            Error_List errors = new Error_List();
+            errors.addError("Invalid token", tools.verifyToken(token, salt, "Player"));
+
+            if (!errors.hasErrors())
+            {
+                Player player = tools.getPlayerByToken(token, salt);
+                List<Score> scores = dbContext.Scores.Where(o => o.Username == player.Username).ToList();
+                foreach (Score score in scores)
+                {
+                    League league = dbContext.Leagues.Find(score.League_Key);
+                    if (league.Championship.CurrentChamp && league.Type == "Private")
+                    {
+                        return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(JsonConvert.SerializeObject(league)) };
+                    }
+                }
+                return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(JsonConvert.SerializeObject(null)) };
+
+            }
+            errors.purgeErrorsList();
+            return new HttpResponseMessage(HttpStatusCode.Conflict) { Content = new StringContent(JsonConvert.SerializeObject(errors)) };
+        }
+
+        public HttpResponseMessage deletePlayer(string token,string salt)
+        {
+            Error_List errors = new Error_List();
+            errors.addError("Invalid token", tools.verifyToken(token, salt, "Player"));
+
+            if (!errors.hasErrors())
+            {
+                Player player = tools.getPlayerByToken(token, salt);
+                dbContext.Players.Remove(player);
+                dbContext.SaveChanges();
+                return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("Player deleted succesfully") };
+
             }
             return new HttpResponseMessage(HttpStatusCode.Conflict) { Content = new StringContent(JsonConvert.SerializeObject(errors)) };
         }

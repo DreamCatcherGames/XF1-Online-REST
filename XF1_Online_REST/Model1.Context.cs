@@ -108,5 +108,14 @@ namespace XF1_Online_REST
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_Delete_Notification", notification_IdParameter);
         }
+    
+        public virtual int SP_Delete_Player(string player_Id)
+        {
+            var player_IdParameter = player_Id != null ?
+                new ObjectParameter("player_Id", player_Id) :
+                new ObjectParameter("player_Id", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_Delete_Player", player_IdParameter);
+        }
     }
 }
