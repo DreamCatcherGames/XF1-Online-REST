@@ -43,6 +43,7 @@ namespace XF1_Online_REST.LogicScript
                     {
                         champ.CurrentChamp = true;
                     }
+#pragma warning disable CS0168 // Variable is declared but never used
                     try
                     {
                         if (!dummy)
@@ -54,6 +55,7 @@ namespace XF1_Online_REST.LogicScript
                     {
 
                     }
+#pragma warning restore CS0168 // Variable is declared but never used
                     dbContext.Championships.Add(champ);
 
                     League publicLeague = new League();
@@ -76,6 +78,7 @@ namespace XF1_Online_REST.LogicScript
                 Score score = new Score();
                 score.Points = 0;
                 score.Username = player.Username;
+                score.League_Key=league.Unique_Key;
                 dbContext.Scores.Add(score);
             }
             dbContext.SaveChanges();

@@ -355,6 +355,9 @@
         <Function Name="SP_Delete_Notification" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Notification_Id" Type="int" Mode="In" />
         </Function>
+        <Function Name="SP_Delete_Player" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="player_Id" Type="varchar" Mode="In" />
+        </Function>
         <Function Name="SP_filterPilots" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Name" Type="varchar" Mode="In" />
           <Parameter Name="Racing_Team" Type="varchar" Mode="In" />
@@ -778,7 +781,10 @@
             <End Role="Notification" EntitySet="Notifications" />
           </AssociationSet>
           <FunctionImport Name="SP_Delete_Notification">
-            <Parameter Name="Notification_Id" Mode="In" Type="Int32" />
+          <Parameter Name="Notification_Id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="SP_Delete_Player">
+            <Parameter Name="player_Id" Mode="In" Type="String" />
           </FunctionImport>
           </EntityContainer>
         <ComplexType Name="SP_filterPilots_Result">
@@ -1029,6 +1035,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="SP_Delete_Notification" FunctionName="XF1OnlineModel.Store.SP_Delete_Notification" />
+          <FunctionImportMapping FunctionImportName="SP_Delete_Player" FunctionName="XF1OnlineModel.Store.SP_Delete_Player" />
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

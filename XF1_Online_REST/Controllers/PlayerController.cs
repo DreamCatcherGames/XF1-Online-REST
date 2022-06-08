@@ -72,5 +72,11 @@ namespace XF1_Online_REST.Controllers
         {
             return logic.deleteNotification(notification, token, salt);
         }
+
+        [Route("api/Player/getPrivateLeague/{token}/{salt}")]
+        public HttpResponseMessage getPrivateLeague(string token, string salt)
+        {
+            return logic.getPrivateLeague(token, salt);
+        }
     }
 }
