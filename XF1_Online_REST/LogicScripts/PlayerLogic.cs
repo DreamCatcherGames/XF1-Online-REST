@@ -171,9 +171,6 @@ namespace XF1_Online_REST.LogicScripts
             dbContext.SP_AddRacing_TeamPlayer("Team 1", player.Username, player.Teams.ToList()[0].Racing_Team_Name);
             dbContext.SP_AddRacing_TeamPlayer("Team 2", player.Username, player.Teams.ToList()[1].Racing_Team_Name);
 
-
-            dbContext.SaveChanges();
-
             foreach (Team team in player.Teams)
             {
                 foreach(Pilot pilot in team.Pilots)
