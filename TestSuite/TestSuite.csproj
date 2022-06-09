@@ -66,6 +66,7 @@
     <Compile Include="ChampionshipTests.cs" />
     <Compile Include="RacesTests.cs" />
     <Compile Include="PlayerTests.cs" />
+    <Compile Include="LeagueTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.Config" />

@@ -167,7 +167,11 @@ namespace XF1_Online_REST.LogicScripts
                 errors.addError("The player already belongs to a private league or owns one", privateLeaguesVerification);
                 if (privateLeaguesVerification)
                 {
-                    League tempLeague = dbContext.Leagues.FirstOrDefault(o => o.Unique_Key == league.Unique_Key && o.Championship.CurrentChamp);
+                    League tempLeague = null;
+                    if (league != null)
+                    {
+                        tempLeague = dbContext.Leagues.FirstOrDefault(o => o.Unique_Key == league.Unique_Key && o.Championship.CurrentChamp);
+                    }
                     Boolean existingLeagueCondition = tempLeague != null;
 
                     errors.addError("The provided code does not belong to any league or the league does not belong to the current championship", existingLeagueCondition);
